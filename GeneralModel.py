@@ -46,18 +46,35 @@ class GeneralModel():
         if self.cell_size_dependance == False:
             cell_size = 10
         else:
-            assert cell_size is not None and raw_data_x.shape[1] == raw_data_y.shape[1] == len(list(stable_resistance)) == len(list(threshold)) == len(list(cell_size))
-            stable_resistance = list(stable_resistance)
+            assert cell_size is not None and len(list(raw_data_x)) == len(list(raw_data_y)) == len(list(threshold)) == len(list(cell_size))
+            raw_data_x = list(raw_data_x)
+            raw_data_y = list(raw_data_y)
             threshold = list(threshold)
             cell_size = list(cell_size)
 
+        if len(cell_size) > 1:
+            linear_model = lmfit.models.LinearModel()
+            fitted_linear_model = linear_model.fit(threshold, x=cell_size)
+            def det_threshold(cell_size):
+                return fitted_linear_model.best_values['slope'] * cell_size + fitted_linear_model.best_values['intercept']
+
+            for index, cell in enumerate(cell_size):
+                threshold[index] = det_threshold(cell)
+
         parameters = Parameters()
-        parameters.add('threshold', value=threshold, vary=False)
-        parameters.add('cell_size', value=cell_size, vary=False)
-        parameters.add('pq_0', value=np.log10(stable_resistance), vary=False)
-        parameters.add('pq_1', value=0.5)
-        parameters.add('pq_2', value=0.5, expr='log(threshold / pq_1) / cell_size')
-        parameters.add('pq_3', value=0.5)
+        for i in range(len(cell_size)):
+            parameters.add('threshold_%d' % (index + 1), value=threshold[i], vary=False)
+            parameters.add('cell_size_%d' % (i + 1), value=cell_size[i])
+            parameters.add('pq_0_%d' % (i + 1), value=np.log10(stable_resistance), vary=False)
+            parameters.add('pq_1_%d' % (i + 1), value=0.5)
+            parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / pq_1_%d) / cell_size_%d' % (i + 1, i + 1, i + 1))
+            parameters.add('pq_3_%d' % (i + 1), value=0.5)
+            if i > 0:
+                parameters['pq_0_%d' % (i + 1)].expr = 'pq_0_1'
+                parameters['pq_1_%d' % (i + 1)].expr = 'pq_1_1'
+                parameters['pq_2_%d' % (i + 1)].expr = 'pq_2_1'
+                parameters['pq_3_%d' % (i + 1)].expr = 'pq_3_1'
+
         if self.cell_size_dependance:
             model = Model(cell_size_harness(self.gradual_convergence))
         else:
@@ -70,3 +87,5 @@ class GeneralModel():
 
 
 # return np.concatenate(out).ravel()
+#     parameters.add('threshold_%d' % (index + 1))
+# parameters.add('threshold', value=threshold, vary=False)
