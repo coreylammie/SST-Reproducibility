@@ -28,7 +28,8 @@ class GeneralModel():
             cell_size = 10
 
         input_stable = pq_1 * np.exp(pq_2 * cell_size)
-        return np.piecewise(input, [input <= input_stable, input > input_stable], [lambda input: 10 ** pq_0, lambda input: 10 ** (pq_3 * cell_size * np.log10(input) + np.log10(10 ** pq_0))]) #+ pq_3 * np.log10(pq_1 * np.exp(pq_2 * cell_size)))])
+        return np.piecewise(input, [input <= input_stable, input > input_stable], [lambda input: 10 ** pq_0, lambda input: 10 ** (pq_3 * np.log10(input) + np.log10(10 ** pq_0) - pq_3 * np.log10(input_stable))])
+        # return np.piecewise(input, [input <= input_stable, input > input_stable], [lambda input: 10 ** pq_0, lambda input: 10 ** (pq_3 * cell_size * np.log10(input - input_stable) + np.log10(10 ** pq_0))])
 
     def fit(self, raw_data_x, raw_data_y, stable_resistance, threshold, cell_size=None):
         assert self.operation_mode == OperationMode.gradual, 'Sudden convergence is not currently supported.'
@@ -48,3 +49,9 @@ class GeneralModel():
         print('input_stable = %f' % (fitted_model.best_values['pq_1'] * np.exp(fitted_model.best_values['pq_2'] * 10)))
         return fitted_model.best_values
         # TODO implement modular fit routine for various cell sizes
+
+
+# 10 ** (m * np.log10(input) + np.log10(10 ** pq_0) - m * np.log10(input_stable))
+
+# lambda x_:k1 - (k1 * (x_ - x_split) ** (k2))
+# return np.piecewise(x, [x < x_split, x >= x_split], [lambda x:k1, lambda x:k1 + k1 * (x - x_split) ** (k2)])

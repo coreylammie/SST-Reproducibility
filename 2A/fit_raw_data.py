@@ -18,8 +18,9 @@ model = GeneralModel(operation_mode=OperationMode.gradual,
 
 lrs_parameters = model.fit(lrs.iloc[:, 0].values, lrs.iloc[:, 1].values, 4400, 1e4)
 hrs_parameters = model.fit(hrs.iloc[:, 0].values, hrs.iloc[:, 1].values, 50000, 1e5)
-lrs_model = model.gradual_convergence(lrs.iloc[:, 0].values, lrs_parameters['pq_0'], lrs_parameters['pq_1'], lrs_parameters['pq_2'], lrs_parameters['pq_3'])
-hrs_model = model.gradual_convergence(hrs.iloc[:, 0].values, hrs_parameters['pq_0'], hrs_parameters['pq_1'], hrs_parameters['pq_2'], hrs_parameters['pq_3'])
+# lrs_model = model.gradual_convergence(lrs.iloc[:, 0].values, lrs_parameters['pq_0'], lrs_parameters['pq_1'], lrs_parameters['pq_2'], lrs_parameters['pq_3'])
+lrs_model = model.gradual_convergence(np.logspace(2, 9, 1e4), lrs_parameters['pq_0'], lrs_parameters['pq_1'], lrs_parameters['pq_2'], lrs_parameters['pq_3'])
+# hrs_model = model.gradual_convergence(hrs.iloc[:, 0].values, hrs_parameters['pq_0'], hrs_parameters['pq_1'], hrs_parameters['pq_2'], hrs_parameters['pq_3'])
 
 plt.figure(1)
 plt.xlim(1e2, 1e9)
@@ -33,7 +34,8 @@ plt.xlabel('Cycles')
 plt.ylabel('Resistance ($\Omega$)')
 plt.grid(b=True, axis='both')
 # Fitted Model
-plt.scatter(lrs.iloc[:, 0].values, lrs_model, label='LRS Model', color='m')
-plt.scatter(hrs.iloc[:, 0].values, hrs_model, label='HRS Model', color='m')
+plt.scatter(np.logspace(2, 9, 1e4), lrs_model, label='LRS Model', color='m')
+# plt.scatter(lrs.iloc[:, 0].values, lrs_model, label='LRS Model', color='m')
+# plt.scatter(hrs.iloc[:, 0].values, hrs_model, label='HRS Model', color='m')
 plt.minorticks_on()
 plt.show()
