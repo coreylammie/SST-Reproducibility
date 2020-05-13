@@ -37,25 +37,10 @@ class GeneralModel():
         concatenated_model_output = np.array([])
         for i in range(len(raw_data_x)):
             concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
-            model_output = self.gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2'], parameters['pq_3'], parameters['cell_size_%d' % (i + 1)])
+            model_output = self.gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2_%d' % (i + 1)], parameters['pq_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
             concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
-
-
-
-        # for x_subset, data_subset in raw_data_x, raw_data_y:
-        #     i = i + 1
-        #     concatenated_data = np.append(concatenated_data, data_subset.flatten()).flatten()
-        #     out = self.gradual_convergence(x_subset, parameters['pq_0'], parameters['pq_1'], parameters['pq_2_%d' % i], parameters['pq_3'], parameters['cell_size_%d' % i])
-        #     print('-----')
-        #     print(x_subset.shape)
-        #     print(data_subset.shape)
-        #     print(out.shape)
-        #     concatenated_model_output = np.append(concatenated_model_output, out.flatten()).flatten()
-        #
-        # return concatenated_data - concatenated_model_output
-
 
     def fit(self, raw_data_x, raw_data_y, stable_resistance, threshold, cell_size=None):
         assert self.operation_mode == OperationMode.gradual, 'Sudden convergence is not currently supported.'
@@ -85,11 +70,10 @@ class GeneralModel():
             parameters.add('threshold_%d' % (i + 1), value=threshold[i], vary=False)
             parameters.add('cell_size_%d' % (i + 1), value=cell_size[i], vary=False)
 
-        parameters.add('pq_2', value=0.5, expr='log(threshold_1 / pq_1) / cell_size_1')
-            # if i == 0:
-            #     parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / pq_1) / cell_size_%d' % (i + 1, i + 1))
-            # else:
-            #     parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / pq_1) / cell_size_%d == pq_2_1' % (i + 1, i + 1)) # == pq_2_1
+            if i == 0:
+                parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_1 / pq_1) / cell_size_1')
+            else:
+                parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / pq_1) / cell_size_%d and pq_2_1' % (i + 1, i + 1))
 
 
         out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
@@ -97,24 +81,8 @@ class GeneralModel():
 
         plt.figure(1)
         for i in range(len(raw_data_x)):
-            plt.plot(raw_data_x[i], self.gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2'], parameters['pq_3'], parameters['cell_size_%d' % (i + 1)]))
+            plt.plot(raw_data_x[i], self.gradual_convergence(raw_data_x[i], out.params['pq_0'], out.params['pq_1'], out.params['pq_2_%d' % (i + 1)], out.params['pq_3'], cell_size=cell_size[i]))
 
         plt.xscale('log')
         plt.yscale('log')
         plt.show()
-
-
-
-
-# fitted_model = model.fit(raw_data_y, input=raw_data_x, params=parameters)
-# print(fitted_model.fit_report()))
-# return fitted_model.best_values
-
-# if self.cell_size_dependance:
-#     model = Model(cell_size_harness(self.gradual_convergence))
-# else:
-#     model = Model(self.gradual_convergence)
-
-# return np.concatenate(out).ravel()
-#     parameters.add('threshold_%d' % (index + 1))
-# parameters.add('threshold', value=threshold, vary=False)
