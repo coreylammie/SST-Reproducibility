@@ -47,11 +47,14 @@ class GeneralModel():
         if self.cell_size_dependance == False:
             cell_size = 10
         else:
-            assert cell_size is not None and len(list(raw_data_x)) == len(list(raw_data_y)) == len(list(threshold)) == len(list(cell_size))
-            raw_data_x = list(raw_data_x)
-            raw_data_y = list(raw_data_y)
-            threshold = list(threshold)
-            cell_size = list(cell_size)
+            assert cell_size is not None
+            if isinstance(cell_size, list):
+                assert len(raw_data_x) == len(raw_data_y) == len(threshold) == len(cell_size)
+            else:
+                raw_data_x = [raw_data_x]
+                raw_data_y = [raw_data_y]
+                threshold = [threshold]
+                cell_size = [cell_size]
 
         if len(cell_size) > 1:
             linear_model = lmfit.models.LinearModel()
