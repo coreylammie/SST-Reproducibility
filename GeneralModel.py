@@ -21,7 +21,7 @@ class GeneralModel():
         self.tempurature_dependance = tempurature_dependance
         self.cell_size_dependance = cell_size_dependance
 
-    def gradual_convergence(self, input, pq_0, pq_1, pq_2, pq_3, r_off=True, cell_size=None):
+    def gradual_convergence(self, input, pq_0, pq_1, pq_2, pq_3, cell_size=None):
         assert input is not None and len(input) > 0, 'input is invalid.'
         assert input.ndim == 1, 'input must be 1-dimensional.'
         output = np.zeros(input.shape)
@@ -65,7 +65,7 @@ class GeneralModel():
         parameters = Parameters()
         parameters.add('pq_0', value=np.log10(stable_resistance), vary=False)
         parameters.add('pq_1', value=0.5)
-        parameters.add('pq_3', value=0.5)
+        parameters.add('pq_3', value=0)
         for i in range(len(cell_size)):
             parameters.add('threshold_%d' % (i + 1), value=threshold[i], vary=False)
             parameters.add('cell_size_%d' % (i + 1), value=cell_size[i], vary=False)
@@ -78,11 +78,4 @@ class GeneralModel():
 
         out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
         print(report_fit(out.params))
-
-        plt.figure(1)
-        for i in range(len(raw_data_x)):
-            plt.plot(raw_data_x[i], self.gradual_convergence(raw_data_x[i], out.params['pq_0'], out.params['pq_1'], out.params['pq_2_%d' % (i + 1)], out.params['pq_3'], cell_size=cell_size[i]))
-
-        plt.xscale('log')
-        plt.yscale('log')
-        plt.show()
+        return out.params
