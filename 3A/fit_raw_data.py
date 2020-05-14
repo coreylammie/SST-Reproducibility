@@ -16,6 +16,7 @@ lrs_parameters = lrs_model.fit_tempurature(lrs.iloc[:, 0].values, lrs.iloc[:, 1]
 hrs_parameters = hrs_model.fit_tempurature(hrs.iloc[:, 0].values, hrs.iloc[:, 1].values, stable_resistance=55000, r_on=False)
 
 plt.figure(1)
+plt.grid()
 plt.xlim(150, 500)
 plt.ylim(1e3, 1e5)
 plt.scatter(lrs.iloc[:, 0], lrs.iloc[:, 1], label='LRS Experimental', color='b')
@@ -25,7 +26,5 @@ plt.scatter(np.linspace(150, 500), hrs_model.model_tempurature_dependence(np.lin
 plt.yscale('log')
 plt.xlabel('Tempurature (K)')
 plt.ylabel('Resistance ($\Omega$)')
-plt.grid(b=True, axis='both')
-plt.minorticks_on()
 plt.legend()
 plt.show()

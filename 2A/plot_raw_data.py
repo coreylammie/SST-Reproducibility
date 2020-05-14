@@ -8,6 +8,7 @@ for index, length in enumerate(lengths):
     lrs = pd.read_csv('LRS_%d_raw_data.csv' % length)
     hrs = pd.read_csv('HRS_%d_raw_data.csv' % length)
     plt.figure(index + 1)
+    plt.grid()
     plt.xlim(1e2, 1e9)
     plt.ylim(1e3, 1e6)
     plt.scatter(lrs.iloc[:, 0].values, lrs.iloc[:, 1].values, label='LRS', color='b')
@@ -18,7 +19,5 @@ for index, length in enumerate(lengths):
     plt.xlabel('Cycles')
     plt.ylabel('Resistance ($\Omega$)')
     plt.legend()
-    plt.grid(b=True, axis='both')
-    plt.minorticks_on()
 
 plt.show()

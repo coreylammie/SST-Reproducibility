@@ -91,4 +91,4 @@ class GeneralModel():
 
         out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
         print(report_fit(out.params))
-        return out.params
+        return {'pq_0': out.params['pq_0'], 'pq_1': out.params['pq_1'], 'pq_2': out.params['pq_2_1'], 'pq_3': out.params['pq_3']}
