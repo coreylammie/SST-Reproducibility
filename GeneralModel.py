@@ -21,7 +21,24 @@ class GeneralModel():
         self.tempurature_dependance = tempurature_dependance
         self.cell_size_dependance = cell_size_dependance
 
-    def gradual_convergence(self, input, pq_0, pq_1, pq_2, pq_3, cell_size=None):
+    def model_tempurature_dependance(self, tempurature, p_0, p_1, p_2):
+        return p_0 * (p_1 ** tempurature) + p_2
+
+    def fit_tempurature(self, raw_data_x, raw_data_y, r_on=True):
+        parameters = Parameters()
+        if r_on:
+            parameters.add('p_0', value=1, min=0)
+        else:
+            parameters.add('p_0', value=-1, max=0)
+        # parameters.add('p_0', value=0)
+        parameters.add('p_1', value=2, min=1)
+        parameters.add('p_2', value=1, min=0)
+        model = Model(self.model_tempurature_dependance)
+        fitted_model = model.fit(raw_data_y, tempurature=raw_data_x, params=parameters)
+        return fitted_model.best_values
+
+
+    def model_gradual_convergence(self, input, pq_0, pq_1, pq_2, pq_3, cell_size=None):
         assert input is not None and len(input) > 0, 'input is invalid.'
         assert input.ndim == 1, 'input must be 1-dimensional.'
         output = np.zeros(input.shape)
