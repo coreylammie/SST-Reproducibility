@@ -21,22 +21,17 @@ class GeneralModel():
         self.tempurature_dependance = tempurature_dependance
         self.cell_size_dependance = cell_size_dependance
 
-    def model_tempurature_dependance(self, tempurature, p_0, p_1, p_2):
-        return p_0 * (p_1 ** tempurature) + p_2
+    def model_tempurature_dependance(self, tempurature, stable_resistance, p_0, stable_tempurature=273):
+        return np.piecewise(tempurature, [tempurature <= stable_tempurature, tempurature > stable_tempurature], [stable_resistance, lambda tempurature: 10 ** (p_0 * tempurature + np.log10(stable_resistance) - p_0 * stable_tempurature)])
 
-    def fit_tempurature(self, raw_data_x, raw_data_y, r_on=True):
+    def fit_tempurature(self, raw_data_x, raw_data_y, stable_resistance, stable_tempurature=273, r_on=True):
         parameters = Parameters()
-        if r_on:
-            parameters.add('p_0', value=1, min=0)
-        else:
-            parameters.add('p_0', value=-1, max=0)
-        # parameters.add('p_0', value=0)
-        parameters.add('p_1', value=2, min=1)
-        parameters.add('p_2', value=1, min=0)
+        parameters.add('stable_resistance', value=stable_resistance, vary=False)
+        parameters.add('p_0', value=1)
+        parameters.add('stable_tempurature', value=stable_tempurature, vary=False)
         model = Model(self.model_tempurature_dependance)
         fitted_model = model.fit(raw_data_y, tempurature=raw_data_x, params=parameters)
         return fitted_model.best_values
-
 
     def model_gradual_convergence(self, input, pq_0, pq_1, pq_2, pq_3, cell_size=None):
         assert input is not None and len(input) > 0, 'input is invalid.'
