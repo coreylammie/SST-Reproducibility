@@ -43,8 +43,8 @@ for i in range(len(cell_sizes)):
     plt.scatter(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, label='LRS Experimental', color='b')
     plt.scatter(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, label='HRS Experimental', color='r')
     # Plot fitted_model
-    plt.scatter(lrs[i].iloc[:, 0].values, lrs_model.gradual_convergence(lrs[i].iloc[:, 0].values, lrs_parameters['pq_0'], lrs_parameters['pq_1'], lrs_parameters['pq_2_1'], lrs_parameters['pq_3'], cell_sizes[i]), label='LRS Model', color='b', marker='s')
-    plt.scatter(hrs[i].iloc[:, 0].values, hrs_model.gradual_convergence(hrs[i].iloc[:, 0].values, hrs_parameters['pq_0'], hrs_parameters['pq_1'], hrs_parameters['pq_2_1'], hrs_parameters['pq_3'], cell_sizes[i]), label='HRS Model', color='r', marker='s')
+    plt.scatter(lrs[i].iloc[:, 0].values, lrs_model.model_gradual_convergence(lrs[i].iloc[:, 0].values, lrs_parameters['pq_0'], lrs_parameters['pq_1'], lrs_parameters['pq_2_1'], lrs_parameters['pq_3'], cell_sizes[i]), label='LRS Model', color='b', marker='s')
+    plt.scatter(hrs[i].iloc[:, 0].values, hrs_model.model_gradual_convergence(hrs[i].iloc[:, 0].values, hrs_parameters['pq_0'], hrs_parameters['pq_1'], hrs_parameters['pq_2_1'], hrs_parameters['pq_3'], cell_sizes[i]), label='HRS Model', color='r', marker='s')
 
 # Single cell size
 lrs_single_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
@@ -70,6 +70,6 @@ plt.title('Cell size = %dnm' % cell_sizes[0])
 plt.scatter(lrs[0].iloc[:, 0].values, lrs[0].iloc[:, 1].values, label='LRS Experimental', color='b')
 plt.scatter(hrs[0].iloc[:, 0].values, hrs[0].iloc[:, 1].values, label='HRS Experimental', color='r')
 # Plot fitted_model
-plt.scatter(lrs[0].iloc[:, 0].values, lrs_model.gradual_convergence(lrs[0].iloc[:, 0].values, lrs_single_parameters['pq_0'], lrs_single_parameters['pq_1'], lrs_single_parameters['pq_2_1'], lrs_single_parameters['pq_3'], cell_sizes[0]), label='LRS Model', color='b', marker='s')
-plt.scatter(hrs[0].iloc[:, 0].values, hrs_model.gradual_convergence(hrs[0].iloc[:, 0].values, hrs_single_parameters['pq_0'], hrs_single_parameters['pq_1'], hrs_single_parameters['pq_2_1'], hrs_single_parameters['pq_3'], cell_sizes[0]), label='HRS Model', color='r', marker='s')
+plt.scatter(lrs[0].iloc[:, 0].values, lrs_model.model_gradual_convergence(lrs[0].iloc[:, 0].values, lrs_single_parameters['pq_0'], lrs_single_parameters['pq_1'], lrs_single_parameters['pq_2_1'], lrs_single_parameters['pq_3'], cell_sizes[0]), label='LRS Model', color='b', marker='s')
+plt.scatter(hrs[0].iloc[:, 0].values, hrs_model.model_gradual_convergence(hrs[0].iloc[:, 0].values, hrs_single_parameters['pq_0'], hrs_single_parameters['pq_1'], hrs_single_parameters['pq_2_1'], hrs_single_parameters['pq_3'], cell_sizes[0]), label='HRS Model', color='r', marker='s')
 plt.show()

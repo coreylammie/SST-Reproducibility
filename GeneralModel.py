@@ -21,7 +21,7 @@ class GeneralModel():
         self.tempurature_dependance = tempurature_dependance
         self.cell_size_dependance = cell_size_dependance
 
-    def model_tempurature_dependance(self, tempurature, stable_resistance, p_0, stable_tempurature=273):
+    def model_tempurature_dependence(self, tempurature, stable_resistance, p_0, stable_tempurature=273):
         return np.piecewise(tempurature, [tempurature <= stable_tempurature, tempurature > stable_tempurature], [stable_resistance, lambda tempurature: 10 ** (p_0 * tempurature + np.log10(stable_resistance) - p_0 * stable_tempurature)])
 
     def fit_tempurature(self, raw_data_x, raw_data_y, stable_resistance, stable_tempurature=273, r_on=True):
@@ -29,7 +29,7 @@ class GeneralModel():
         parameters.add('stable_resistance', value=stable_resistance, vary=False)
         parameters.add('p_0', value=1)
         parameters.add('stable_tempurature', value=stable_tempurature, vary=False)
-        model = Model(self.model_tempurature_dependance)
+        model = Model(self.model_tempurature_dependence)
         fitted_model = model.fit(raw_data_y, tempurature=raw_data_x, params=parameters)
         return fitted_model.best_values
 
@@ -49,7 +49,7 @@ class GeneralModel():
         concatenated_model_output = np.array([])
         for i in range(len(raw_data_x)):
             concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
-            model_output = self.gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2_%d' % (i + 1)], parameters['pq_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
+            model_output = self.model_gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2_%d' % (i + 1)], parameters['pq_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
             concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
@@ -84,12 +84,10 @@ class GeneralModel():
         for i in range(len(cell_size)):
             parameters.add('threshold_%d' % (i + 1), value=threshold[i], vary=False)
             parameters.add('cell_size_%d' % (i + 1), value=cell_size[i], vary=False)
-
             if i == 0:
                 parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_1 / pq_1) / cell_size_1')
             else:
                 parameters.add('pq_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / pq_1) / cell_size_%d and pq_2_1' % (i + 1, i + 1))
-
 
         out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
         print(report_fit(out.params))
