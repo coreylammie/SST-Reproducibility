@@ -41,7 +41,47 @@ class GeneralModel():
             cell_size = 10
 
         input_stable = pq_1 * np.exp(pq_2 * cell_size)
-        return np.piecewise(input, [input <= input_stable, input > input_stable], [lambda input: 10 ** pq_0, lambda input: 10 ** (pq_3 * cell_size * np.log10(input) + np.log10(10 ** pq_0) - pq_3 * cell_size * np.log10(input_stable))])
+        return np.piecewise(input, [input <= input_stable, input > input_stable], [10 ** pq_0, lambda input: 10 ** (pq_3 * cell_size * np.log10(input) + np.log10(10 ** pq_0) - pq_3 * cell_size * np.log10(input_stable))])
+
+    def model_sudden_convergence(self, input, pq_0, pq_1, threshold, cell_size=None):
+        # 10 ** pq_0 init resistane, 10 ** pq_1 final resistance, threshold- determined using linear regression.
+        assert input is not None and len(input) > 0, 'input is invalid.'
+        assert input.ndim == 1, 'input must be 1-dimensional.'
+        output = np.zeros(input.shape)
+        if cell_size is None:
+            cell_size = 10
+
+        return np.piecewise(input, [input < threshold, input >= threshold], [10 ** pq_0, lambda input: 10 ** pq_1])
+
+
+    # def fit_sudden(self, init_resistance, stable_resistane, threshold, cell_size=None):
+    #     if cell_size is None:
+    #         cell_size = 10
+    #
+    #     parameters = Parameters()
+    #     parameters.add('pq_0', value=np.log10(stable_resistance), vary=False)
+    #     parameters.add('pq_1', value=0.5)
+    #     parameters.add('pq_2', value=0.5, expr='log(threshold / pq_1) / cell_size')
+    #
+    #
+    #
+    #     model = Model(self.model_sudden_convergence)
+    #     model.fit()
+
+
+
+        # fit failure threshold as function of cell size.
+
+
+
+
+
+
+
+
+
+
+
 
     def objective(self, parameters, raw_data_x, raw_data_y):
         assert len(raw_data_x) == len(raw_data_y)
