@@ -21,7 +21,7 @@ plt.ylabel('Resistance ($\Omega$)')
 plt.grid(b=True, axis='both')
 plt.minorticks_on()
 
-lrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
-plt.scatter(lrs.iloc[:, 0].values, lrs_model.model_sudden_convergence(lrs.iloc[:, 0].values, np.log10(10.75e4), np.log10(2e4), threshold=2e7), color='m')
+hrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
+plt.scatter(hrs.iloc[:, 0].values, hrs_model.model_sudden_convergence(hrs.iloc[:, 0].values, np.log10(10.75e4), np.log10(2e4), threshold=2e7), color='m')
 
 plt.show()

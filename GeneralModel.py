@@ -53,35 +53,22 @@ class GeneralModel():
 
         return np.piecewise(input, [input < threshold, input >= threshold], [10 ** pq_0, lambda input: 10 ** pq_1])
 
+    
 
-    # def fit_sudden(self, init_resistance, stable_resistane, threshold, cell_size=None):
-    #     if cell_size is None:
-    #         cell_size = 10
-    #
-    #     parameters = Parameters()
-    #     parameters.add('pq_0', value=np.log10(stable_resistance), vary=False)
-    #     parameters.add('pq_1', value=0.5)
-    #     parameters.add('pq_2', value=0.5, expr='log(threshold / pq_1) / cell_size')
-    #
-    #
-    #
-    #     model = Model(self.model_sudden_convergence)
-    #     model.fit()
+    def fit_sudden(self, prior_resistance, post_resistance, threshold, cell_size=None):
+        if self.cell_size_dependance == False:
+            cell_size = 10
+        else:
+            assert cell_size is not None
 
+        if len(cell_size) > 1:
+            linear_model = lmfit.models.LinearModel()
+            fitted_linear_model = linear_model.fit(threshold, x=cell_size)
+            def det_threshold(cell_size):
+                return fitted_linear_model.best_values['slope'] * cell_size + fitted_linear_model.best_values['intercept']
 
-
-        # fit failure threshold as function of cell size.
-
-
-
-
-
-
-
-
-
-
-
+            for index, cell in enumerate(cell_size):
+                threshold[index] = det_threshold(cell)
 
     def objective(self, parameters, raw_data_x, raw_data_y):
         assert len(raw_data_x) == len(raw_data_y)
