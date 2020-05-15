@@ -7,8 +7,8 @@ from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
 
-hrs = pd.read_csv('HRS_raw_data.csv')
 lrs = pd.read_csv('LRS_raw_data.csv')
+hrs = pd.read_csv('HRS_raw_data.csv')
 
 lrs_model = GeneralModel(operation_mode=OperationMode.gradual)
 hrs_model = GeneralModel(operation_mode=OperationMode.gradual)

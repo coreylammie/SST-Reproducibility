@@ -20,13 +20,13 @@ cell_sizes = [10, 20, 30]
 
 # Cell size dependence
 lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-lrs_parameters = lrs_model.fit(raw_data_x=[lrs_10.iloc[:, 0].values, lrs_20.iloc[:, 0].values],
+hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
+lrs_model_parameters = lrs_model.fit(raw_data_x=[lrs_10.iloc[:, 0].values, lrs_20.iloc[:, 0].values],
                            raw_data_y=[lrs_10.iloc[:, 1].values, lrs_20.iloc[:, 1].values],
                            stable_resistance=4400,
                            threshold=[1e4, 1e7],
                            cell_size=[10, 20])
-hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-hrs_parameters = hrs_model.fit(raw_data_x=[hrs_10.iloc[:, 0].values, hrs_20.iloc[:, 0].values],
+hrs_model_parameters = hrs_model.fit(raw_data_x=[hrs_10.iloc[:, 0].values, hrs_20.iloc[:, 0].values],
                            raw_data_y=[hrs_10.iloc[:, 1].values, hrs_20.iloc[:, 1].values],
                            stable_resistance=65000,
                            threshold=[1e4, 1e7],
@@ -40,22 +40,21 @@ for i in range(len(cell_sizes)):
     plt.xscale('log')
     plt.yscale('log')
     plt.title('Cell size = %dnm' % cell_sizes[i])
-    # Plot raw_data
     plt.scatter(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, label='LRS Experimental', color='b')
     plt.scatter(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, label='HRS Experimental', color='r')
-    # Plot fitted_model
-    plt.scatter(lrs[i].iloc[:, 0].values, lrs_model.model_gradual_convergence(lrs[i].iloc[:, 0].values, **lrs_parameters, cell_size=cell_sizes[i]), label='LRS Model', color='b', marker='s')
-    plt.scatter(hrs[i].iloc[:, 0].values, hrs_model.model_gradual_convergence(hrs[i].iloc[:, 0].values, **hrs_parameters, cell_size=cell_sizes[i]), label='HRS Model', color='r', marker='s')
+    plt.scatter(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), label='LRS Model', color='b', marker='s')
+    plt.scatter(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), label='HRS Model', color='r', marker='s')
+    plt.legend()
 
 # Single cell size
 lrs_single_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-lrs_single_parameters = lrs_single_model.fit(raw_data_x=lrs_10.iloc[:, 0].values,
+hrs_single_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
+lrs_single_model_parameters = lrs_single_model.fit(raw_data_x=lrs_10.iloc[:, 0].values,
                            raw_data_y=lrs_10.iloc[:, 1].values,
                            stable_resistance=4400,
                            threshold=1e4,
                            cell_size=10)
-hrs_single_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-hrs_single_parameters = lrs_single_model.fit(raw_data_x=hrs_10.iloc[:, 0].values,
+hrs_single_model_parameters = lrs_single_model.fit(raw_data_x=hrs_10.iloc[:, 0].values,
                            raw_data_y=hrs_10.iloc[:, 1].values,
                            stable_resistance=65000,
                            threshold=1e4,
@@ -68,10 +67,9 @@ plt.ylim(1e3, 1e6)
 plt.xscale('log')
 plt.yscale('log')
 plt.title('Cell size = %dnm' % cell_sizes[0])
-# Plot raw_data
 plt.scatter(lrs[0].iloc[:, 0].values, lrs[0].iloc[:, 1].values, label='LRS Experimental', color='b')
 plt.scatter(hrs[0].iloc[:, 0].values, hrs[0].iloc[:, 1].values, label='HRS Experimental', color='r')
-# Plot fitted_model
-plt.scatter(lrs[0].iloc[:, 0].values, lrs_model.model_gradual_convergence(lrs[0].iloc[:, 0].values, **lrs_single_parameters, cell_size=cell_sizes[0]), label='LRS Model', color='b', marker='s')
-plt.scatter(hrs[0].iloc[:, 0].values, hrs_model.model_gradual_convergence(hrs[0].iloc[:, 0].values, **hrs_single_parameters, cell_size=cell_sizes[0]), label='HRS Model', color='r', marker='s')
+plt.scatter(lrs[0].iloc[:, 0].values, lrs_model.model(lrs[0].iloc[:, 0].values, **lrs_single_model_parameters, cell_size=cell_sizes[0]), label='LRS Model', color='b', marker='s')
+plt.scatter(hrs[0].iloc[:, 0].values, hrs_model.model(hrs[0].iloc[:, 0].values, **hrs_single_model_parameters, cell_size=cell_sizes[0]), label='HRS Model', color='r', marker='s')
+plt.legend()
 plt.show()

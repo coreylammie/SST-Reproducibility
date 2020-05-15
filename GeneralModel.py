@@ -45,7 +45,8 @@ class GeneralModel():
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * np.log10(threshold))])
         elif self.operation_mode == OperationMode.sudden:
             threshold = cell_size * p_2 + p_3
-            return np.piecewise(input, [input < threshold, input >= threshold], [10 ** pq_0, lambda input: 10 ** pq_1])
+            print(threshold)
+            return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** p_1])
 
     def objective(self, parameters, raw_data_x, raw_data_y):
         assert len(raw_data_x) == len(raw_data_y)
@@ -53,7 +54,7 @@ class GeneralModel():
         concatenated_model_output = np.array([])
         for i in range(len(raw_data_x)):
             concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
-            model_output = self.model_gradual_convergence(raw_data_x[i], parameters['pq_0'], parameters['pq_1'], parameters['pq_2_%d' % (i + 1)], parameters['pq_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
+            model_output = self.model(raw_data_x[i], parameters['p_0'], parameters['p_1'], parameters['p_2_%d' % (i + 1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
             concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
@@ -61,10 +62,14 @@ class GeneralModel():
     def fit(self, cell_size=None, **kwargs):
         if self.operation_mode == OperationMode.gradual:
             assert {'raw_data_x', 'raw_data_y', 'stable_resistance', 'threshold'} <= set(kwargs)
-        elif self.operation_mode == OperationMode.sudden
+            raw_data_x = kwargs['raw_data_x']
+            raw_data_y = kwargs['raw_data_y']
+        elif self.operation_mode == OperationMode.sudden:
             assert {'initial_resistance', 'stable_resistance', 'threshold'} <= set(kwargs)
+            initial_resistance = kwargs['initial_resistance']
 
-        self.fit.__globals__.update(kwargs)
+        stable_resistance = kwargs['stable_resistance']
+        threshold = kwargs['threshold']
         if self.cell_size_dependance == False:
             cell_size = 10
         else:
@@ -84,7 +89,6 @@ class GeneralModel():
                     threshold = [threshold]
                     cell_size = [cell_size]
 
-        threshold_slope = 1
         threshold_intercept = 0
         if type(cell_size) is list:
             if len(cell_size) > 1:
@@ -97,6 +101,10 @@ class GeneralModel():
 
                 for index, cell in enumerate(cell_size):
                     threshold[index] = det_threshold(cell)
+            else:
+                threshold_slope = threshold[0] / cell_size[0]
+        else:
+            threshold_slope = threshold / cell_size
 
         if self.operation_mode == OperationMode.gradual:
             parameters = Parameters()
