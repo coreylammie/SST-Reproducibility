@@ -22,6 +22,11 @@ plt.grid(b=True, axis='both')
 plt.minorticks_on()
 
 hrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
-plt.scatter(hrs.iloc[:, 0].values, hrs_model.model_sudden_convergence(hrs.iloc[:, 0].values, np.log10(10.75e4), np.log10(2e4), threshold=2e7), color='m')
+hrs_model.fit(initial_resistance=10.75e4, stable_resistance=2.00e4, threshold=2.00e7)
 
+exit(0)
+
+hrs_model_output = hrs_model.model_sudden_convergence(hrs.iloc[:, 0].values, np.log10(10.75e4), np.log10(2e4), threshold=2e7)
+
+plt.scatter(hrs.iloc[:, 0].values, hrs_model_output, color='m')
 plt.show()
