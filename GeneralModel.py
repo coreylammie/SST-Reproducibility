@@ -35,7 +35,7 @@ class GeneralModel():
 
     def model(self, input, p_0, p_1, p_2, p_3, cell_size=None):
         assert input is not None
-        # assert input.ndim == 1, 'input must be 1-dimensional.'
+        input = np.array(input)
         output = np.zeros(input.shape)
         if cell_size is None:
             cell_size = 10
@@ -54,9 +54,9 @@ class GeneralModel():
         concatenated_model_output = np.array([])
         number_of_sets = int(parameters['number_of_sets'])
         if number_of_sets == 1:
-            concatenated_output = np.append(concatenated_output, raw_data_y.flatten()).flatten()
+            concatenated_output = np.append(concatenated_output, raw_data_y).flatten()
             model_output = self.model(raw_data_x, parameters['p_0'], parameters['p_1'], parameters['p_2_1'], parameters['p_3'], cell_size=parameters['cell_size_1'])
-            concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
+            concatenated_model_output = np.append(concatenated_model_output, model_output).flatten()
         else:
             for i in range(number_of_sets):
                 concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
