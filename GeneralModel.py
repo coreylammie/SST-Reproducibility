@@ -34,8 +34,8 @@ class GeneralModel():
         return fitted_model.best_values
 
     def model(self, input, p_0, p_1, p_2, p_3, cell_size=None):
-        assert input is not None and len(input) > 0, 'input is invalid.'
-        assert input.ndim == 1, 'input must be 1-dimensional.'
+        assert input is not None
+        input = np.array(input)
         output = np.zeros(input.shape)
         if cell_size is None:
             cell_size = 10
@@ -52,10 +52,16 @@ class GeneralModel():
         assert len(raw_data_x) == len(raw_data_y)
         concatenated_output = np.array([])
         concatenated_model_output = np.array([])
-        for i in range(len(raw_data_x)):
-            concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
-            model_output = self.model(raw_data_x[i], parameters['p_0'], parameters['p_1'], parameters['p_2_%d' % (i + 1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
-            concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
+        number_of_sets = int(parameters['number_of_sets'])
+        if number_of_sets == 1:
+            concatenated_output = np.append(concatenated_output, raw_data_y).flatten()
+            model_output = self.model(raw_data_x, parameters['p_0'], parameters['p_1'], parameters['p_2_1'], parameters['p_3'], cell_size=parameters['cell_size_1'])
+            concatenated_model_output = np.append(concatenated_model_output, model_output).flatten()
+        else:
+            for i in range(number_of_sets):
+                concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
+                model_output = self.model(raw_data_x[i], parameters['p_0'], parameters['p_1'], parameters['p_2_%d' % (i + 1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i + 1)])
+                concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
 
@@ -111,6 +117,11 @@ class GeneralModel():
             parameters.add('p_0', value=np.log10(stable_resistance), vary=False)
             parameters.add('p_1', value=0.5)
             parameters.add('p_3', value=0)
+            if not type(cell_size) is list:
+                cell_size = [cell_size]
+                threshold = [threshold]
+
+            parameters.add('number_of_sets', value=len(cell_size), vary=False)
             for i in range(len(cell_size)):
                 parameters.add('threshold_%d' % (i + 1), value=threshold[i], vary=False)
                 parameters.add('cell_size_%d' % (i + 1), value=cell_size[i], vary=False)
@@ -119,7 +130,7 @@ class GeneralModel():
                 else:
                     parameters.add('p_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1' % (i + 1, i + 1))
 
-            out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y)) # print(report_fit(out.params))
+            out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
             return {'p_0': out.params['p_0'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1'], 'p_3': out.params['p_3']}
         elif self.operation_mode == OperationMode.sudden:
             return {'p_0': np.log10(initial_resistance), 'p_1': np.log10(stable_resistance), 'p_2': threshold_slope, 'p_3': threshold_intercept}
