@@ -45,6 +45,8 @@ for i in range(len(cell_sizes)):
     plt.scatter(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), label='LRS Model', color='b', marker='s')
     plt.scatter(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), label='HRS Model', color='r', marker='s')
     plt.legend()
+    plt.xlabel('Time (s)')
+    plt.ylabel('Resistance ($\Omega$)')
 
 # Single cell size
 lrs_single_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
@@ -72,4 +74,6 @@ plt.scatter(hrs[0].iloc[:, 0].values, hrs[0].iloc[:, 1].values, label='HRS Exper
 plt.scatter(lrs[0].iloc[:, 0].values, lrs_model.model(lrs[0].iloc[:, 0].values, **lrs_single_model_parameters, cell_size=cell_sizes[0]), label='LRS Model', color='b', marker='s')
 plt.scatter(hrs[0].iloc[:, 0].values, hrs_model.model(hrs[0].iloc[:, 0].values, **hrs_single_model_parameters, cell_size=cell_sizes[0]), label='HRS Model', color='r', marker='s')
 plt.legend()
+plt.xlabel('Time (s)')
+plt.ylabel('Resistance ($\Omega$)')
 plt.show()
