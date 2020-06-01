@@ -38,6 +38,9 @@ hrs_model_parameters = hrs_model.fit(raw_data_x=[hrs_10.iloc[:, 0].values, hrs_2
                            threshold=[1e4, 1e7],
                            cell_size=[10, 20])
 
+print(lrs_model_parameters)
+print(hrs_model_parameters)
+
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 16

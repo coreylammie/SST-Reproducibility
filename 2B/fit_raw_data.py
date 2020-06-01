@@ -19,6 +19,9 @@ lrs_model_parameters = lrs_model.fit(initial_resistance=2.00e4, stable_resistanc
 hrs_model_parameters = hrs_model.fit(initial_resistance=10.75e4, stable_resistance=2.00e4, threshold=2.00e7)
 lrs_model_output = lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters)
 hrs_model_output = hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters)
+print(lrs_model_parameters)
+print(hrs_model_parameters)
+
 
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
@@ -35,7 +38,7 @@ plt.plot(hrs.iloc[:, 0], hrs.iloc[:, 1], label='HRS Experimental', linestyle='-'
 plt.plot(lrs.iloc[:, 0].values, lrs_model_output, label='LRS Model', linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 plt.plot(hrs.iloc[:, 0].values, hrs_model_output, label='HRS Model', linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 plt.xscale('log')
-plt.xlabel('Time (s)', fontsize=label_size)
+plt.xlabel('Cycle Number', fontsize=label_size)
 plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
 

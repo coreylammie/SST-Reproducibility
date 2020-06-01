@@ -30,7 +30,7 @@ label_size = 16
 tick_size = 12
 h = plt.figure(1)
 plt.xlim(4e1, 2e6)
-plt.ylim(1e4, 1e6)
+plt.ylim(5e4, 5e5)
 plt.plot(lrs.iloc[:, 0], lrs.iloc[:, 1], label='LRS Experimental', linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
 plt.plot(hrs.iloc[:, 0], hrs.iloc[:, 1], label='HRS Experimental', linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
 plt.plot(lrs.iloc[:, 0].values, lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters), label='LRS Model T=125$^{\circ}$C', linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -71,7 +71,9 @@ hrs_model_parameters.update({'p_0': np.log10(hrs_stable_resistance)})
 plt.plot(lrs.iloc[:, 0].values, lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters), label='LRS Model T=75$^{\circ}$C', linestyle='-.', color='b', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
 plt.plot(hrs.iloc[:, 0].values, hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters), label='HRS Model T=75$^{\circ}$C', linestyle='-.', color='r', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
 
-handles, labels = h.gca().get_legend_handles_labels()
-order = [0, 1, 4, 5, 2, 3]
-h.gca().legend([handles[idx] for idx in order], [labels[idx] for idx in order])
+# handles, labels = h.gca().get_legend_handles_labels()
+# order = [0, 1, 4, 5, 2, 3]
+# h.gca().legend([handles[idx] for idx in order], [labels[idx] for idx in order])
+
+plt.axvline(x=1200)
 plt.show()

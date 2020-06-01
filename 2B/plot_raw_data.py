@@ -22,7 +22,7 @@ plt.ylim(1e4, 12e4)
 plt.plot(lrs.iloc[:, 0], lrs.iloc[:, 1], label='LRS', linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
 plt.plot(hrs.iloc[:, 0], hrs.iloc[:, 1], label='HRS', linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
 plt.xscale('log')
-plt.xlabel('Time (s)', fontsize=label_size)
+plt.xlabel('Cycle Number', fontsize=label_size)
 plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
 
