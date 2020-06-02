@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import math
-import sys
-sys.path.append("..")
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
