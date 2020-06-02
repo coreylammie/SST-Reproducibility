@@ -45,7 +45,6 @@ class GeneralModel():
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * np.log10(threshold))])
         elif self.operation_mode == OperationMode.sudden:
             threshold = cell_size * p_2 + p_3
-            print(threshold)
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** p_1])
 
     def objective(self, parameters, raw_data_x, raw_data_y):
