@@ -1,0 +1,25 @@
+figure(3);
+data = csvread('retention_gradual.csv', 1);
+x = log10(data(:, 1));
+y = data(:, 2) - 273;
+z = data(:, 3);
+dt = delaunayTriangulation(x,y) ;
+tri = dt.ConnectivityList ;
+xi = dt.Points(:,1) ; yi = dt.Points(:,2) ;
+F = scatteredInterpolant(x,y,z);
+zi = F(xi,yi);
+colormap(redblue);
+trisurf(tri,xi,yi,zi) 
+xlabel('Time (s)');
+xtickformat('10^%d');
+xlim([0, 9]);
+xticks(0:9);
+ylim([75, 175]);
+yticks(75:25:175);
+ylabel('Tempurature (°C)');
+zlabel('Test Set Accuracy (%)');
+zlim([30, 90]);
+zticks(30:20:90);
+title('Retention (Gradual Operation)'); 
+% view(0,90);
+view(45, 45);
