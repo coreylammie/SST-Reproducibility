@@ -1,4 +1,4 @@
-# General Metal-Oxide ReRAM Device Endurance and Retention Model for Deep Learning Simulations
+# General Metal-Oxide RRAM Device Endurance and Retention Model for Deep Learning Simulations
 
 ![](https://img.shields.io/badge/license-GPL-blue.svg)
 [![](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/)
