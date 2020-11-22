@@ -17,7 +17,7 @@ xticks(1:9);
 ylim([1.3, 1.9]);
 ylabel('v_{stop}');
 zlabel('Test Set Accuracy (%)');
-zlim([40, 90]);
+zlim([40, 100]);
 title('Endurance (Gradual Operation)'); 
 % view(0,90);
 view(45, 45);

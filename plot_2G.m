@@ -12,14 +12,14 @@ colormap(redblue);
 trisurf(tri,xi,yi,zi) 
 xlabel('Time (s)');
 xtickformat('10^%d');
-xlim([0, 9]);
 xticks(0:9);
+xlim([1, 9]);
 ylim([75, 175]);
 yticks(75:25:175);
 ylabel('Tempurature (°C)');
 zlabel('Test Set Accuracy (%)');
-zlim([30, 90]);
-zticks(30:20:90);
+zlim([10, 100]);
+zticks(10:30:100);
 title('Retention (Gradual Operation)'); 
 % view(0,90);
 view(45, 45);
