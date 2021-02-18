@@ -15,6 +15,7 @@ class OperationMode(Enum):
     gradual = auto()
 
 class GeneralModel():
+    # TODO Add optimization method argument to __init__
     def __init__(self, operation_mode, tempurature_dependance=False, cell_size_dependance=False):
         self.operation_mode = operation_mode
         self.tempurature_dependance = tempurature_dependance
@@ -111,7 +112,9 @@ class GeneralModel():
                 else:
                     parameters.add('p_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1' % (i + 1, i + 1))
 
-            out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
+            out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y), max_nfev=100000)
+            print(out.params.pretty_print())
+            print(out.residual)
             return {'p_0': out.params['p_0'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1'], 'p_3': out.params['p_3']}
         elif self.operation_mode == OperationMode.sudden:
             threshold_model = Model(lambda cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size))
@@ -120,11 +123,7 @@ class GeneralModel():
                 parameters.add('p_2', value=0.5)
             else:
                 parameters.add('p_2', value=0.5, vary=False)
-                
+
             parameters.add('p_3', value=0.5)
             out = threshold_model.fit(threshold, cell_size=cell_size, params=parameters)
             return {'p_0': np.log10(initial_resistance), 'p_1': np.log10(stable_resistance), 'p_2': out.params['p_2'], 'p_3':  out.params['p_3']}
-            # else:
-            #     threshold_intercept = 0
-            #     threshold_slope = threshold / cell_size
-            #     return {'p_0': np.log10(initial_resistance), 'p_1': np.log10(stable_resistance), 'p_2': threshold_slope, 'p_3': threshold_intercept}
