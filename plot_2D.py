@@ -8,9 +8,9 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs = pd.read_csv('Experimental Data/2B_LRS_raw_data.csv')
+lrs = pd.read_csv('Experimental Data/2D_LRS_raw_data.csv')
 lrs = lrs.sort_values(by=lrs.columns[0])
-hrs = pd.read_csv('Experimental Data/2B_HRS_raw_data.csv')
+hrs = pd.read_csv('Experimental Data/2D_HRS_raw_data.csv')
 hrs = hrs.sort_values(by=hrs.columns[0])
 
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data

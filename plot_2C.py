@@ -11,21 +11,17 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs_10 = pd.read_csv('10_L.csv', header=None)
-lrs_20 = pd.read_csv('20_L.csv', header=None)
-lrs_30 = pd.read_csv('30_L.csv', header=None)
-lrs_40 = pd.read_csv('40_L.csv', header=None)
-hrs_10 = pd.read_csv('10_R.csv', header=None)
-hrs_20 = pd.read_csv('20_R.csv', header=None)
-hrs_30 = pd.read_csv('30_R.csv', header=None)
-hrs_40 = pd.read_csv('40_R.csv', header=None)
-lrs_10 = lrs_10.sort_values(by=lrs_10.columns[0])
+lrs_20 = pd.read_csv('Experimental Data/2C_LRS_20_raw_data.csv', header=None)
 lrs_20 = lrs_20.sort_values(by=lrs_20.columns[0])
+lrs_30 = pd.read_csv('Experimental Data/2C_LRS_30_raw_data.csv', header=None)
 lrs_30 = lrs_30.sort_values(by=lrs_30.columns[0])
+lrs_40 = pd.read_csv('Experimental Data/2C_LRS_40_raw_data.csv', header=None)
 lrs_40 = lrs_40.sort_values(by=lrs_40.columns[0])
-hrs_10 = hrs_10.sort_values(by=hrs_10.columns[0])
+hrs_20 = pd.read_csv('Experimental Data/2C_HRS_20_raw_data.csv', header=None)
 hrs_20 = hrs_20.sort_values(by=hrs_20.columns[0])
+hrs_30 = pd.read_csv('Experimental Data/2C_HRS_30_raw_data.csv', header=None)
 hrs_30 = hrs_30.sort_values(by=hrs_30.columns[0])
+hrs_40 = pd.read_csv('Experimental Data/2C_HRS_40_raw_data.csv', header=None)
 hrs_40 = hrs_40.sort_values(by=hrs_40.columns[0])
 lrs = [lrs_20, lrs_30, lrs_40]
 hrs = [hrs_20, hrs_30, hrs_40]
@@ -66,7 +62,6 @@ for i in range(len(cell_sizes)):
     plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
-        print(cell_sizes[i])
         plt.plot(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 

@@ -93,23 +93,6 @@ class GeneralModel():
                     threshold = [threshold]
                     cell_size = [cell_size]
 
-        # threshold_intercept = 0
-        # if type(cell_size) is list:
-        #     if len(cell_size) > 1:
-        #         linear_model = lmfit.models.LinearModel()
-        #         fitted_linear_model = linear_model.fit(threshold, x=cell_size)
-        #         threshold_slope = fitted_linear_model.best_values['slope']
-        #         threshold_intercept = fitted_linear_model.best_values['intercept']
-        #         def det_threshold(cell_size):
-        #             return fitted_linear_model.best_values['slope'] * cell_size + fitted_linear_model.best_values['intercept']
-        #
-        #         for index, cell in enumerate(cell_size):
-        #             threshold[index] = det_threshold(cell)
-        #     else:
-        #         threshold_slope = threshold[0] / cell_size[0]
-        # else:
-        #     threshold_slope = threshold / cell_size
-
         if self.operation_mode == OperationMode.gradual:
             parameters = Parameters()
             parameters.add('p_0', value=np.log10(stable_resistance), vary=False)
@@ -133,7 +116,15 @@ class GeneralModel():
         elif self.operation_mode == OperationMode.sudden:
             threshold_model = Model(lambda cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size))
             parameters = Parameters()
-            parameters.add('p_2', value=0.5)
+            if type(cell_size) is list:
+                parameters.add('p_2', value=0.5)
+            else:
+                parameters.add('p_2', value=0.5, vary=False)
+                
             parameters.add('p_3', value=0.5)
             out = threshold_model.fit(threshold, cell_size=cell_size, params=parameters)
             return {'p_0': np.log10(initial_resistance), 'p_1': np.log10(stable_resistance), 'p_2': out.params['p_2'], 'p_3':  out.params['p_3']}
+            # else:
+            #     threshold_intercept = 0
+            #     threshold_slope = threshold / cell_size
+            #     return {'p_0': np.log10(initial_resistance), 'p_1': np.log10(stable_resistance), 'p_2': threshold_slope, 'p_3': threshold_intercept}
