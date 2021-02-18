@@ -113,8 +113,6 @@ class GeneralModel():
                     parameters.add('p_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1' % (i + 1, i + 1))
 
             out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y), max_nfev=100000)
-            print(out.params.pretty_print())
-            print(out.residual)
             return {'p_0': out.params['p_0'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1'], 'p_3': out.params['p_3']}
         elif self.operation_mode == OperationMode.sudden:
             threshold_model = Model(lambda cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size))
