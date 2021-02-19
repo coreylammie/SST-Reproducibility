@@ -18,8 +18,6 @@ class GeneralModel():
     # TODO Add optimization method argument to __init__
     def __init__(self, operation_mode, tempurature_dependance=False, cell_size_dependance=False):
         self.operation_mode = operation_mode
-        # self.tempurature_dependance = tempurature_dependance
-        # self.cell_size_dependance = cell_size_dependance
 
     # def model_tempurature_dependence(self, tempurature, stable_resistance, p_0, stable_tempurature=273):
     #     return np.piecewise(tempurature, [tempurature <= stable_tempurature, tempurature > stable_tempurature], [stable_resistance, lambda tempurature: 10 ** (p_0 * tempurature + np.log10(stable_resistance) - p_0 * stable_tempurature)])
@@ -52,6 +50,7 @@ class GeneralModel():
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * tempurature_constant * np.log10(threshold))])
         elif self.operation_mode == OperationMode.sudden:
             threshold =  p_2 * np.exp(p_3 * cell_size * tempurature_constant)
+            print(threshold)
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** p_1])
 
     def objective(self, parameters, raw_data_x, raw_data_y):
@@ -67,38 +66,16 @@ class GeneralModel():
             for i in range(int(parameters['cell_size_sets'])):
                 if int(parameters['tempurature_sets']) > 1:
                     for j in range(int(parameters['tempurature_sets'])):
-                        # if parameters['cell_size_%d' % (i+1)].value == float('-inf'):
-                        #     cell_size_ = None
-                        # else:
-                        #     cell_size_ = parameters['cell_size_%d' % (i+1)].value
-
                         concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)]).flatten()
                         model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)], parameters['initial_resistance'], parameters['p_1'],
                                                   parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
                                                   tempurature=parameters['tempurature_%d' % (j+1)], tempurature_threshold=parameters['tempurature_threshold'])
                         concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
                 else:
-                    # print('TODO')
-                    # TODO TBD
-                    # exit(0)
                     concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)].value, None)]).flatten()
                     model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)].value, None)], parameters['initial_resistance'], parameters['p_1'],
                                               parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)])
                     concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
-
-
-                    # concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)], None)]).flatten()
-                    # model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)], None)], parameters['initial_resistance'], parameters['p_1'],
-                    #                           parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
-                    #                           tempurature=parameters['tempurature_1'], tempurature_threshold=parameters['tempurature_threshold'])
-                    # concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
-
-            # exit(0)
-            # for i in range(number_of_sets):
-            #     concatenated_output = np.append(concatenated_output, raw_data_y[i].flatten()).flatten()
-            #     model_output = self.model(raw_data_x[i], parameters['initial_resistance'], parameters['p_1'], parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
-            #                               tempurature=parameters['tempurature_%d' % (i+1)], tempurature_threshold=parameters['tempurature_threshold'])
-            #     concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
 
@@ -157,30 +134,22 @@ class GeneralModel():
                     else:
                         parameters.add('p_2_1_%d' % (i+1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1_1' % (i+1, i+1))
 
-                # parameters.add('threshold_%d' % (i + 1), value=threshold[i], vary=False)
-                # parameters.add('cell_size_%d' % (i + 1), value=cell_size[i], vary=False)
-                # if i == 0:
-                #     parameters.add('p_2_%d' % (i + 1), value=0.5, expr='log(threshold_1 / p_1) / cell_size_1')
-                # else:
-                #     parameters.add('p_2_%d' % (i + 1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1' % (i + 1, i + 1))
-
             out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
-            print(fit_report(out))
             return {'initial_resistance': out.params['initial_resistance'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1_1'], 'p_3': out.params['p_3'], 'tempurature_threshold': out.params['tempurature_threshold']}
         elif self.operation_mode == OperationMode.sudden:
             if tempurature is not None:
                 threshold_model = Model(lambda tempurature_threshold, tempurature, cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size * (tempurature / tempurature_threshold)), independent_vars=['tempurature','cell_size'])
             else:
-                pass
+                # pass
                 threshold_model = Model(lambda cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size))
 
             parameters = Parameters()
             if len(cell_size) == 1:
-                parameters.add('p_2', value=0.5, vary=False)
+                parameters.add('p_2', value=0.1, vary=False)
             else:
-                parameters.add('p_2', value=0.5)
+                parameters.add('p_2', value=0.1)
 
-            parameters.add('p_3', value=0.5)
+            parameters.add('p_3', value=0.1)
             if tempurature is not None:
                 threshold_ = np.empty((len(tempurature), len(cell_size)))
                 for i_idx, tempurature_ in enumerate(tempurature):
@@ -188,8 +157,8 @@ class GeneralModel():
                         threshold_[i_idx, j_idx] = threshold[(cell_size_, tempurature_)]
             else:
                 threshold_ = np.empty(len(cell_size))
-                for i_idx, cell_size in enumerate(cell_size):
-                    threshold_[i_idx] = threshold[(cell_size, None)]
+                for i_idx, cell_size_ in enumerate(cell_size):
+                    threshold_[i_idx] = threshold[(cell_size_, None)]
 
                 out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
 

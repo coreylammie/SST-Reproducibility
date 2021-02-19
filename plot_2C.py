@@ -66,6 +66,8 @@ if fit_raw_data:
                                threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
+print(lrs_model_parameters)
+print(hrs_model_parameters)
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
