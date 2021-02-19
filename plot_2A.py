@@ -21,21 +21,38 @@ lrs = [lrs_10, lrs_20]
 hrs = [hrs_10, hrs_20]
 cell_sizes = [10, 20]
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in gradual operation mode to the 10nm and 20nm experimental data
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
     hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    lrs_model_parameters = lrs_model.fit(raw_data_x=[lrs_10.iloc[:, 0].values, lrs_20.iloc[:, 0].values],
-                               raw_data_y=[lrs_10.iloc[:, 1].values, lrs_20.iloc[:, 1].values],
-                               stable_resistance=4400,
-                               threshold=[1e4, 1e7],
-                               cell_size=[10, 20])
-    hrs_model_parameters = hrs_model.fit(raw_data_x=[hrs_10.iloc[:, 0].values, hrs_20.iloc[:, 0].values],
-                               raw_data_y=[hrs_10.iloc[:, 1].values, hrs_20.iloc[:, 1].values],
-                               stable_resistance=65000,
-                               threshold=[1e4, 1e7],
-                               cell_size=[10, 20])
-
+    lrs_raw_data_x = {}
+    lrs_raw_data_x[(10, None)] = lrs_10.iloc[:, 0].values
+    lrs_raw_data_x[(20, None)] = lrs_20.iloc[:, 0].values
+    lrs_raw_data_y = {}
+    lrs_raw_data_y[(10, None)] = lrs_10.iloc[:, 1].values
+    lrs_raw_data_y[(20, None)] = lrs_20.iloc[:, 1].values
+    lrs_threshold = {}
+    lrs_threshold[(10, None)] = 1e4
+    lrs_threshold[(20, None)] = 1e7
+    lrs_model_parameters = lrs_model.fit(raw_data_x=lrs_raw_data_x,
+                               raw_data_y=lrs_raw_data_y,
+                               initial_resistance=4400,
+                               threshold=lrs_threshold,
+                               cell_size=cell_sizes)
+    hrs_raw_data_x = {}
+    hrs_raw_data_x[(10, None)] = hrs_10.iloc[:, 0].values
+    hrs_raw_data_x[(20, None)] = hrs_20.iloc[:, 0].values
+    hrs_raw_data_y = {}
+    hrs_raw_data_y[(10, None)] = hrs_10.iloc[:, 1].values
+    hrs_raw_data_y[(20, None)] = hrs_20.iloc[:, 1].values
+    hrs_threshold = {}
+    hrs_threshold[(10, None)] = 1e4
+    hrs_threshold[(20, None)] = 1e7
+    hrs_model_parameters = hrs_model.fit(raw_data_x=hrs_raw_data_x,
+                               raw_data_y=hrs_raw_data_y,
+                               initial_resistance=65000,
+                               threshold=hrs_threshold,
+                               cell_size=cell_sizes)
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'

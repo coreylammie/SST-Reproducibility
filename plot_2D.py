@@ -17,8 +17,12 @@ hrs = hrs.sort_values(by=hrs.columns[0])
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=False)
     hrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=False)
-    lrs_model_parameters = lrs_model.fit(initial_resistance=2.00e4, stable_resistance=2.00e4, threshold=0)
-    hrs_model_parameters = hrs_model.fit(initial_resistance=10.75e4, stable_resistance=2.00e4, threshold=2.00e7)
+    lrs_threshold = {}
+    lrs_threshold[(10, None)] = 0.
+    lrs_model_parameters = lrs_model.fit(initial_resistance=2.00e4, stable_resistance=2.00e4, threshold=lrs_threshold)
+    hrs_threshold = {}
+    hrs_threshold[(10, None)] = 2e7
+    hrs_model_parameters = hrs_model.fit(initial_resistance=10.75e4, stable_resistance=2.00e4, threshold=hrs_threshold)
     lrs_model_output = lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters)
     hrs_model_output = hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters)
 

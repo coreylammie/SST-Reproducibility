@@ -29,17 +29,41 @@ cell_sizes = [20, 30, 40]
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
     hrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
-    lrs_model_parameters = lrs_model.fit(raw_data_x=[lrs_20.iloc[:, 0].values, lrs_30.iloc[:, 0].values, lrs_40.iloc[:, 0].values],
-                               raw_data_y=[lrs_20.iloc[:, 1].values, lrs_30.iloc[:, 1].values, lrs_40.iloc[:, 1].values],
+    lrs_raw_data_x = {}
+    lrs_raw_data_x[(20, None)] = lrs_20.iloc[:, 0].values
+    lrs_raw_data_x[(30, None)] = lrs_30.iloc[:, 0].values
+    lrs_raw_data_x[(40, None)] = lrs_40.iloc[:, 0].values
+    lrs_raw_data_y = {}
+    lrs_raw_data_y[(20, None)] = lrs_20.iloc[:, 1].values
+    lrs_raw_data_y[(30, None)] = lrs_30.iloc[:, 1].values
+    lrs_raw_data_y[(40, None)] = lrs_40.iloc[:, 1].values
+    lrs_threshold = {}
+    lrs_threshold[(20, None)] = 2.4e6
+    lrs_threshold[(30, None)] = 2e7
+    lrs_threshold[(40, None)] = 2.5e8
+    lrs_model_parameters = lrs_model.fit(raw_data_x=lrs_raw_data_x,
+                               raw_data_y=lrs_raw_data_y,
                                initial_resistance=14000,
                                stable_resistance=5e7,
-                               threshold=[2.4e6, 2e7, 2.5e8],
+                               threshold=lrs_threshold,
                                cell_size=cell_sizes)
-    hrs_model_parameters = hrs_model.fit(raw_data_x=[hrs_20.iloc[:, 0].values, hrs_30.iloc[:, 0].values, hrs_40.iloc[:, 0].values],
-                               raw_data_y=[hrs_20.iloc[:, 1].values, hrs_30.iloc[:, 1].values, hrs_40.iloc[:, 1].values],
+    hrs_raw_data_x = {}
+    hrs_raw_data_x[(20, None)] = hrs_20.iloc[:, 0].values
+    hrs_raw_data_x[(30, None)] = hrs_30.iloc[:, 0].values
+    hrs_raw_data_x[(40, None)] = hrs_40.iloc[:, 0].values
+    hrs_raw_data_y = {}
+    hrs_raw_data_y[(20, None)] = hrs_20.iloc[:, 1].values
+    hrs_raw_data_y[(30, None)] = hrs_30.iloc[:, 1].values
+    hrs_raw_data_y[(40, None)] = hrs_40.iloc[:, 1].values
+    hrs_threshold = {}
+    hrs_threshold[(20, None)] = 2e6
+    hrs_threshold[(30, None)] = 1.5e7
+    hrs_threshold[(40, None)] = 1.7e8
+    hrs_model_parameters = hrs_model.fit(raw_data_x=hrs_raw_data_x,
+                               raw_data_y=hrs_raw_data_y,
                                initial_resistance=300000,
                                stable_resistance=5e7,
-                               threshold=[2e6, 1.5e7, 1.7e8],
+                               threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
 # Plot the experimental data and results from the fitted models
