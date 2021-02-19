@@ -8,9 +8,9 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs = pd.read_csv('Experimental Data/2C_LRS_raw_data.csv')
+lrs = pd.read_csv('Experimental Data/3B_LRS_raw_data.csv')
 lrs = lrs.sort_values(by=lrs.columns[0])
-hrs = pd.read_csv('Experimental Data/2C_HRS_raw_data.csv')
+hrs = pd.read_csv('Experimental Data/3B_HRS_raw_data.csv')
 hrs = hrs.sort_values(by=hrs.columns[0])
 
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data
@@ -51,18 +51,18 @@ plt.grid(b=True, which='both')
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
 if fit_raw_data:
     general_model = GeneralModel(operation_mode=None)
-    lrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=175+273, stable_resistance=9e4, p_0=0.000801158151673717 * (2400/9e4), stable_tempurature=298)
-    hrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=175+273, stable_resistance=330000, p_0=-0.00420717061486765 * (55000/330000), stable_tempurature=298)
-    lrs_model_parameters.update({'p_0': np.log10(lrs_stable_resistance)})
-    hrs_model_parameters.update({'p_0': np.log10(hrs_stable_resistance)})
+    # lrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=175+273, stable_resistance=9e4, p_0=0.000801158151673717 * (2400/9e4), stable_tempurature=298)
+    # hrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=175+273, stable_resistance=330000, p_0=-0.00420717061486765 * (55000/330000), stable_tempurature=298)
+    # lrs_model_parameters.update({'p_0': np.log10(lrs_stable_resistance)})
+    # hrs_model_parameters.update({'p_0': np.log10(hrs_stable_resistance)})
     plt.plot(lrs.iloc[:, 0].values, lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters), linestyle='--', color='b', marker='^', markersize=15, markerfacecolor='None', markeredgewidth=1)
     plt.plot(hrs.iloc[:, 0].values, hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters), linestyle='--', color='r', marker='^', markersize=15, markerfacecolor='None', markeredgewidth=1)
-    lrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=75+273, stable_resistance=9e4, p_0=0.000801158151673717 * (2400/9e4), stable_tempurature=298)
-    hrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=75+273, stable_resistance=330000, p_0=-0.00420717061486765 * (55000/330000), stable_tempurature=298)
-    lrs_model_parameters.update({'p_0': np.log10(lrs_stable_resistance)})
-    hrs_model_parameters.update({'p_0': np.log10(hrs_stable_resistance)})
-    plt.plot(lrs.iloc[:, 0].values, lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters), linestyle='-.', color='b', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
-    plt.plot(hrs.iloc[:, 0].values, hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters), linestyle='-.', color='r', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
+    # lrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=75+273, stable_resistance=9e4, p_0=0.000801158151673717 * (2400/9e4), stable_tempurature=298)
+    # hrs_stable_resistance = general_model.model_tempurature_dependence(tempurature=75+273, stable_resistance=330000, p_0=-0.00420717061486765 * (55000/330000), stable_tempurature=298)
+    # lrs_model_parameters.update({'p_0': np.log10(lrs_stable_resistance)})
+    # hrs_model_parameters.update({'p_0': np.log10(hrs_stable_resistance)})
+    # plt.plot(lrs.iloc[:, 0].values, lrs_model.model(lrs.iloc[:, 0].values, **lrs_model_parameters), linestyle='-.', color='b', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
+    # plt.plot(hrs.iloc[:, 0].values, hrs_model.model(hrs.iloc[:, 0].values, **hrs_model_parameters), linestyle='-.', color='r', marker='v', markersize=15, markerfacecolor='None', markeredgewidth=1)
 
 plt.axvspan(1200, 1e6, facecolor='b', alpha=0.25)
 plt.axvline(x=1200)
