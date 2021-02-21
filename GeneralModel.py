@@ -9,6 +9,8 @@ import lmfit
 from lmfit import minimize, Parameters, Model, fit_report
 import matplotlib.pyplot as plt
 
+# np.seterr(all='raise')
+
 
 class OperationMode(Enum):
     sudden = auto()
@@ -42,15 +44,30 @@ class GeneralModel():
             assert tempurature_threshold is not None
             tempurature_constant = tempurature / tempurature_threshold
         else:
+            print('X')
             tempurature_constant = 1
 
         p_0 = np.log10(initial_resistance)
         if self.operation_mode == OperationMode.gradual:
             threshold = p_1 * np.exp(p_2 * cell_size * tempurature_constant)
-            return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * tempurature_constant * np.log10(threshold))])
+            print(threshold)
+            out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** ((p_3 * cell_size) ** tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - (p_3 * cell_size) ** tempurature_constant * np.log10(threshold))])
+            # out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * tempurature_constant * np.log10(threshold))])
+            if out is None or np.isnan(out).any() or np.isinf(out).any():
+                print('NaN Encountered')
+                print('out:', out)
+                print('input:', input)
+                print('threshold: %f' % threshold)
+                print('p_0: %f' % p_0)
+                print('p_3: %f' % p_3)
+                print('tempurature_constant: %f' % tempurature_constant)
+                exit(0)
+            else:
+                # print(out)
+                return out
+
         elif self.operation_mode == OperationMode.sudden:
             threshold =  p_2 * np.exp(p_3 * cell_size * tempurature_constant)
-            print(threshold)
             return np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** p_1])
 
     def objective(self, parameters, raw_data_x, raw_data_y):
@@ -66,6 +83,7 @@ class GeneralModel():
             for i in range(int(parameters['cell_size_sets'])):
                 if int(parameters['tempurature_sets']) > 1:
                     for j in range(int(parameters['tempurature_sets'])):
+                        print(j)
                         concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)]).flatten()
                         model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)], parameters['initial_resistance'], parameters['p_1'],
                                                   parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
@@ -103,10 +121,42 @@ class GeneralModel():
 
         assert type(threshold) is dict
         if self.operation_mode == OperationMode.gradual:
+            if tempurature is not None:
+                f_ = lambda tempurature_threshold, tempurature, cell_size, p_1, p_2: p_1 * np.exp(p_2 * cell_size * (tempurature / tempurature_threshold))
+                threshold_model = Model(f_, independent_vars=['tempurature','cell_size'])
+            else:
+                f_ = lambda cell_size, p_1, p_2: p_1 * np.exp(p_2 * cell_size)
+                threshold_model = Model(f_)
+
+            parameters = Parameters()
+            if len(cell_size) == 1:
+                parameters.add('p_1', value=0.1, vary=False)
+            else:
+                parameters.add('p_1', value=0.5)
+
+            parameters.add('p_2', value=0.5)
+            if tempurature is not None:
+                parameters.add('tempurature_threshold', value=tempurature_threshold, vary=False)
+                threshold_ = np.empty((len(tempurature), len(cell_size)))
+                for i_idx, tempurature_ in enumerate(tempurature):
+                    for j_idx, cell_size_ in enumerate(cell_size):
+                        threshold_[i_idx, j_idx] = threshold[(cell_size_, tempurature_)]
+
+                out = threshold_model.fit(threshold_, parameters, tempurature=tempurature, cell_size=cell_size)
+            else:
+                threshold_ = np.empty(len(cell_size))
+                for i_idx, cell_size_ in enumerate(cell_size):
+                    threshold_[i_idx] = threshold[(cell_size_, None)]
+
+                out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
+
             parameters = Parameters()
             parameters.add('initial_resistance', value=initial_resistance, vary=False)
-            parameters.add('p_1', value=1.)
-            parameters.add('p_3', value=0.)
+            parameters.add('p_1', value=5.471e+19, vary=False)
+            parameters.add('p_1', value=out.params['p_1'], vary=False)
+            # parameters.add('p_2_1_1', value= -0.07368 * 298 / 10, vary=False)
+            parameters.add('p_2_1_1', value=out.params['p_2'], vary=False)
+            # parameters.add('p_3', value=0.5, min=0.05)
             parameters.add('tempurature_threshold', value=tempurature_threshold, vary=False)
             if tempurature is not None:
                 parameters.add('tempurature_sets', value=len(tempurature), vary=False)
@@ -118,29 +168,34 @@ class GeneralModel():
             parameters.add('cell_size_sets', value=len(cell_size), vary=False)
             for i in range(len(cell_size)):
                 parameters.add('cell_size_%d' % (i+1), value=cell_size[i], vary=False)
-                if tempurature is not None:
-                    for j in range(len(tempurature)):
-                        parameters.add('threshold_%d_%d' % (i+1, j+1), value=threshold[(cell_size[i], tempurature[j])], vary=False)
-                        if i == 0 and j == 0:
-                            parameters.add('p_2_1_%d' % (j+1), value=0.5, expr='log(threshold_1_%d / p_1) / (cell_size_1 * min(tempurature_threshold / tempurature_%d, 1))' % (j+1, j+1))
-                        else:
-                            parameters.add('p_2_%d_%d' % (i+1, j+1), value=0.5, expr='log(threshold_%d_%d / p_1) / (cell_size_%d * min(tempurature_threshold / tempurature_%d, 1)) and p_2_1_1' % (i+1, j+1, i+1, j+1))
-                else:
-                    # exit(0)
-                    parameters.add('threshold_%d' % (i+1), value=threshold[(cell_size[i], None)], vary=False)
-                    parameters.add('cell_size_%d' % (i+1), value=cell_size[i], vary=False)
-                    if i == 0:
-                        parameters.add('p_2_1_1', value=0.5, expr='log(threshold_1 / p_1) / cell_size_1')
-                    else:
-                        parameters.add('p_2_1_%d' % (i+1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1_1' % (i+1, i+1))
+                # if tempurature is not None:
+                #     for j in range(len(tempurature)):
+                #         # parameters.add('threshold_%d_%d' % (i+1, j+1), value=threshold[(cell_size[i], tempurature[j])], vary=False)
+                #         # if i == 0 and j == 0:
+                #         #     parameters.add('p_2_1_%d' % (j+1), value=0.5, expr='log(threshold_1_1 / p_1) * tempurature_threshold / (cell_size_1 * tempurature_1)')
+                #         #     # parameters.add('p_2_1_%d' % (j+1), value=0.5, expr='log(threshold_1_%d / p_1) / (cell_size_1 * min(tempurature_threshold / tempurature_%d, 1))' % (j+1, j+1))
+                #         # else:
+                #         #     parameters.add('p_2_%d_%d' % (i+1, j+1), value=0.5, expr='p_2_1_1 and (log(threshold_%d_%d / p_1) * tempurature_threshold / (cell_size_%d * tempurature_%d)) ' % (i+1, j+1, i+1, j+1))
+                #         #     # parameters.add('p_2_%d_%d' % (i+1, j+1), value=0.5, expr='log(threshold_%d_%d / p_1) / (cell_size_%d * min(tempurature_threshold / tempurature_%d, 1)) and p_2_1_1' % (i+1, j+1, i+1, j+1))
+                #     parameters.add('p_2_1_1', value=1e-12, min=1e-12, expr='ln(threshold_1_1 / p_1) * tempurature_threshold / (cell_size_1 * tempurature_1) == ln(threshold_1_2 / p_1) * tempurature_threshold / (cell_size_1 * tempurature_2) == ln(threshold_1_3 / p_1) * tempurature_threshold / (cell_size_1 * tempurature_3)')
+                # else:
+                #     parameters.add('threshold_%d' % (i+1), value=threshold[(cell_size[i], None)], vary=False)
+                #     parameters.add('cell_size_%d' % (i+1), value=cell_size[i], vary=False)
+                #     if i == 0:
+                #         parameters.add('p_2_1_1', value=0.5, expr='log(threshold_1 / p_1) / cell_size_1')
+                #     else:
+                #         parameters.add('p_2_1_%d' % (i+1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1_1' % (i+1, i+1))
 
             out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
+            print(fit_report(out))
+            print(out.params)
+
+
             return {'initial_resistance': out.params['initial_resistance'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1_1'], 'p_3': out.params['p_3'], 'tempurature_threshold': out.params['tempurature_threshold']}
         elif self.operation_mode == OperationMode.sudden:
             if tempurature is not None:
                 threshold_model = Model(lambda tempurature_threshold, tempurature, cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size * (tempurature / tempurature_threshold)), independent_vars=['tempurature','cell_size'])
             else:
-                # pass
                 threshold_model = Model(lambda cell_size, p_2, p_3: p_2 * np.exp(p_3 * cell_size))
 
             parameters = Parameters()
@@ -160,7 +215,7 @@ class GeneralModel():
                 for i_idx, cell_size_ in enumerate(cell_size):
                     threshold_[i_idx] = threshold[(cell_size_, None)]
 
-                out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
+            out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
 
             if tempurature is not None:
                 return {'initial_resistance': initial_resistance, 'p_1': np.log10(stable_resistance), 'p_2': out.params['p_2'], 'p_3':  out.params['p_3'], 'tempurature_threshold': out.params['tempurature_threshold']}
