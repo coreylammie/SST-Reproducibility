@@ -11,11 +11,11 @@ from GeneralModel import OperationMode
 # Constant compliance current- 200uA
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs_200 = pd.read_csv('Experimental Data/3A_LRS_200_raw_data.csv', header=None)
+lrs_200 = pd.read_csv('Experimental Data/3A_LRS_200.csv', header=None)
 lrs_200 = lrs_200.sort_values(by=lrs_200.columns[0])
-lrs_225 = pd.read_csv('Experimental Data/3A_LRS_225_raw_data.csv', header=None)
+lrs_225 = pd.read_csv('Experimental Data/3A_LRS_225.csv', header=None)
 lrs_225 = lrs_225.sort_values(by=lrs_225.columns[0])
-lrs_250 = pd.read_csv('Experimental Data/3A_LRS_250_raw_data.csv', header=None)
+lrs_250 = pd.read_csv('Experimental Data/3A_LRS_250.csv', header=None)
 lrs_250 = lrs_250.sort_values(by=lrs_250.columns[0])
 lrs = [lrs_250, lrs_225, lrs_200]
 tempuratures = [200+273, 225+273, 250+273]

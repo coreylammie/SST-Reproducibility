@@ -9,17 +9,17 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs_20 = pd.read_csv('Experimental Data/2C_LRS_20_raw_data.csv', header=None)
+lrs_20 = pd.read_csv('Experimental Data/2C_LRS_20.csv', header=None)
 lrs_20 = lrs_20.sort_values(by=lrs_20.columns[0])
-lrs_30 = pd.read_csv('Experimental Data/2C_LRS_30_raw_data.csv', header=None)
+lrs_30 = pd.read_csv('Experimental Data/2C_LRS_30.csv', header=None)
 lrs_30 = lrs_30.sort_values(by=lrs_30.columns[0])
-lrs_40 = pd.read_csv('Experimental Data/2C_LRS_40_raw_data.csv', header=None)
+lrs_40 = pd.read_csv('Experimental Data/2C_LRS_40.csv', header=None)
 lrs_40 = lrs_40.sort_values(by=lrs_40.columns[0])
-hrs_20 = pd.read_csv('Experimental Data/2C_HRS_20_raw_data.csv', header=None)
+hrs_20 = pd.read_csv('Experimental Data/2C_HRS_20.csv', header=None)
 hrs_20 = hrs_20.sort_values(by=hrs_20.columns[0])
-hrs_30 = pd.read_csv('Experimental Data/2C_HRS_30_raw_data.csv', header=None)
+hrs_30 = pd.read_csv('Experimental Data/2C_HRS_30.csv', header=None)
 hrs_30 = hrs_30.sort_values(by=hrs_30.columns[0])
-hrs_40 = pd.read_csv('Experimental Data/2C_HRS_40_raw_data.csv', header=None)
+hrs_40 = pd.read_csv('Experimental Data/2C_HRS_40.csv', header=None)
 hrs_40 = hrs_40.sort_values(by=hrs_40.columns[0])
 lrs = [lrs_20, lrs_30, lrs_40]
 hrs = [hrs_20, hrs_30, hrs_40]
@@ -66,8 +66,8 @@ if fit_raw_data:
                                threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
-print(lrs_model_parameters)
-print(hrs_model_parameters)
+# print(lrs_model_parameters)
+# print(hrs_model_parameters)
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'

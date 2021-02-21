@@ -9,13 +9,13 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs_10 = pd.read_csv('Experimental Data/2A_LRS_10_raw_data.csv')
+lrs_10 = pd.read_csv('Experimental Data/2A_LRS_10.csv')
 lrs_10 = lrs_10.sort_values(by=lrs_10.columns[0])
-lrs_20 = pd.read_csv('Experimental Data/2A_LRS_20_raw_data.csv')
+lrs_20 = pd.read_csv('Experimental Data/2A_LRS_20.csv')
 lrs_20 = lrs_20.sort_values(by=lrs_20.columns[0])
-hrs_10 = pd.read_csv('Experimental Data/2A_HRS_10_raw_data.csv')
+hrs_10 = pd.read_csv('Experimental Data/2A_HRS_10.csv')
 hrs_10 = hrs_10.sort_values(by=hrs_10.columns[0])
-hrs_20 = pd.read_csv('Experimental Data/2A_HRS_20_raw_data.csv')
+hrs_20 = pd.read_csv('Experimental Data/2A_HRS_20.csv')
 hrs_20 = hrs_20.sort_values(by=hrs_20.columns[0])
 lrs = [lrs_10, lrs_20]
 hrs = [hrs_10, hrs_20]

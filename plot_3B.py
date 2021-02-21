@@ -11,18 +11,18 @@ from GeneralModel import OperationMode
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs_200_O = pd.read_csv('Experimental Data/3B_LRS_O_200_raw_data.csv', header=None)
+lrs_200_O = pd.read_csv('Experimental Data/3B_LRS_O_200.csv', header=None)
 lrs_200_O = lrs_200_O.sort_values(by=lrs_200_O.columns[0])
-lrs_250_O = pd.read_csv('Experimental Data/3B_LRS_O_250_raw_data.csv', header=None)
+lrs_250_O = pd.read_csv('Experimental Data/3B_LRS_O_250.csv', header=None)
 lrs_220_O = lrs_250_O.sort_values(by=lrs_250_O.columns[0])
-lrs_300_O = pd.read_csv('Experimental Data/3B_LRS_O_300_raw_data.csv', header=None)
+lrs_300_O = pd.read_csv('Experimental Data/3B_LRS_O_300.csv', header=None)
 lrs_300_O = lrs_300_O.sort_values(by=lrs_300_O.columns[0])
 lrs_O = [lrs_200_O, lrs_250_O, lrs_300_O]
-lrs_200_A = pd.read_csv('Experimental Data/3B_LRS_Al_200_raw_data.csv', header=None)
+lrs_200_A = pd.read_csv('Experimental Data/3B_LRS_Al_200.csv', header=None)
 lrs_200_A = lrs_200_A.sort_values(by=lrs_200_A.columns[0])
-lrs_250_A = pd.read_csv('Experimental Data/3B_LRS_Al_250_raw_data.csv', header=None)
+lrs_250_A = pd.read_csv('Experimental Data/3B_LRS_Al_250.csv', header=None)
 lrs_220_A = lrs_250_A.sort_values(by=lrs_250_A.columns[0])
-lrs_300_A = pd.read_csv('Experimental Data/3B_LRS_Al_300_raw_data.csv', header=None)
+lrs_300_A = pd.read_csv('Experimental Data/3B_LRS_Al_300.csv', header=None)
 lrs_300_A = lrs_300_A.sort_values(by=lrs_300_A.columns[0])
 lrs_A = [lrs_200_A, lrs_250_A, lrs_300_A]
 tempuratures = [273+200, 273+250, 273+300]
@@ -50,10 +50,10 @@ for i in range(len(tempuratures)):
     plt.xscale('log')
     plt.yscale('log')
     plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='magenta', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O_model.model(lrs_O[i].iloc[:, 0].values, **lrs_O_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
-        plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A_model.model(lrs_A[i].iloc[:, 0].values, **lrs_A_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
+        plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A_model.model(lrs_A[i].iloc[:, 0].values, **lrs_A_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='magenta', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 
     plt.xlabel('Time (s)', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)

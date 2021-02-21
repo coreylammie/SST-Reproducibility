@@ -44,13 +44,12 @@ class GeneralModel():
             assert tempurature_threshold is not None
             tempurature_constant = tempurature / tempurature_threshold
         else:
-            print('X')
             tempurature_constant = 1
 
         p_0 = np.log10(initial_resistance)
         if self.operation_mode == OperationMode.gradual:
             threshold = p_1 * np.exp(p_2 * cell_size * tempurature_constant)
-            print(threshold)
+            # print(threshold)
             out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** ((p_3 * cell_size) ** tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - (p_3 * cell_size) ** tempurature_constant * np.log10(threshold))])
             # out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * tempurature_constant * np.log10(threshold))])
             if out is None or np.isnan(out).any() or np.isinf(out).any():
@@ -83,16 +82,15 @@ class GeneralModel():
             for i in range(int(parameters['cell_size_sets'])):
                 if int(parameters['tempurature_sets']) > 1:
                     for j in range(int(parameters['tempurature_sets'])):
-                        print(j)
                         concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)]).flatten()
                         model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)].value, parameters['tempurature_%d' % (j+1)].value)], parameters['initial_resistance'], parameters['p_1'],
-                                                  parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
+                                                  parameters['p_2_1_1'], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)],
                                                   tempurature=parameters['tempurature_%d' % (j+1)], tempurature_threshold=parameters['tempurature_threshold'])
                         concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
                 else:
                     concatenated_output = np.append(concatenated_output, raw_data_y[(parameters['cell_size_%d' % (i+1)].value, None)]).flatten()
                     model_output = self.model(raw_data_x[(parameters['cell_size_%d' % (i+1)].value, None)], parameters['initial_resistance'], parameters['p_1'],
-                                              parameters['p_2_1_%d' % (i+1)], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)])
+                                              parameters['p_2_1_1'], parameters['p_3'], cell_size=parameters['cell_size_%d' % (i+1)])
                     concatenated_model_output = np.append(concatenated_model_output, model_output.flatten()).flatten()
 
         return np.abs(concatenated_model_output - concatenated_output)
@@ -132,9 +130,9 @@ class GeneralModel():
             if len(cell_size) == 1:
                 parameters.add('p_1', value=0.1, vary=False)
             else:
-                parameters.add('p_1', value=0.5)
+                parameters.add('p_1', value=0.1)
 
-            parameters.add('p_2', value=0.5)
+            parameters.add('p_2', value=0.1)
             if tempurature is not None:
                 parameters.add('tempurature_threshold', value=tempurature_threshold, vary=False)
                 threshold_ = np.empty((len(tempurature), len(cell_size)))
@@ -149,14 +147,16 @@ class GeneralModel():
                     threshold_[i_idx] = threshold[(cell_size_, None)]
 
                 out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
+                # print(out)
+                # print(fit_report(out))
 
             parameters = Parameters()
             parameters.add('initial_resistance', value=initial_resistance, vary=False)
-            parameters.add('p_1', value=5.471e+19, vary=False)
+            # parameters.add('p_1', value=5.471e+19, vary=False)
             parameters.add('p_1', value=out.params['p_1'], vary=False)
             # parameters.add('p_2_1_1', value= -0.07368 * 298 / 10, vary=False)
             parameters.add('p_2_1_1', value=out.params['p_2'], vary=False)
-            # parameters.add('p_3', value=0.5, min=0.05)
+            parameters.add('p_3', value=0.5)
             parameters.add('tempurature_threshold', value=tempurature_threshold, vary=False)
             if tempurature is not None:
                 parameters.add('tempurature_sets', value=len(tempurature), vary=False)
@@ -187,8 +187,8 @@ class GeneralModel():
                 #         parameters.add('p_2_1_%d' % (i+1), value=0.5, expr='log(threshold_%d / p_1) / cell_size_%d and p_2_1_1' % (i+1, i+1))
 
             out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
-            print(fit_report(out))
-            print(out.params)
+            # print(fit_report(out))
+            # print(out.params)
 
 
             return {'initial_resistance': out.params['initial_resistance'], 'p_1': out.params['p_1'], 'p_2': out.params['p_2_1_1'], 'p_3': out.params['p_3'], 'tempurature_threshold': out.params['tempurature_threshold']}
