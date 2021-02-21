@@ -2,17 +2,17 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import sys
-sys.path.insert(0,'..')
+# import sys
+# sys.path.insert(0,'..')
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
 
 fit_raw_data = True
 # Import and concatenate experimental data
-lrs = pd.read_csv('X_LRS_raw_data.csv')
+lrs = pd.read_csv('Experimental Data/3C_LRS.csv')
 lrs = lrs.sort_values(by=lrs.columns[0])
-hrs = pd.read_csv('X_HRS_raw_data.csv')
+hrs = pd.read_csv('Experimental Data/3C_HRS.csv')
 hrs = hrs.sort_values(by=hrs.columns[0])
 
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data

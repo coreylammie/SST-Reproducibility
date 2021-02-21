@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import math
-import sys
-sys.path.insert(0,'..')
+# import sys
+# sys.path.insert(0,'..')
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
