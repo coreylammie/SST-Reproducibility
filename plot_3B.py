@@ -30,9 +30,9 @@ tempuratures = [273+200, 273+250, 273+300]
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data
 if fit_raw_data:
     lrs_O_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    lrs_O_model_parameters = {'initial_resistance': 4250, 'p_1': 5.471e19, 'p_2': -2.195664, 'p_3': 0.11622935929992417, 'tempurature_threshold': 298}
+    lrs_O_model_parameters = {'initial_resistance': 4250, 'p_1': 14610000000, 'p_2': -1.9784220000000001, 'p_3': 0.14041884744983046, 'tempurature_threshold': 298}
     lrs_A_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    lrs_A_model_parameters = {'initial_resistance': 4250, 'p_1': 2.633e19, 'p_2': -2.19328, 'p_3': 0.07677623515706467, 'tempurature_threshold': 298}
+    lrs_A_model_parameters = {'initial_resistance': 4250, 'p_1': 790100000000, 'p_2': -2.5029019999999997, 'p_3': 0.0577995548620432257, 'tempurature_threshold': 298}
 
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2

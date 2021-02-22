@@ -18,31 +18,32 @@ lrs_220 = lrs_250.sort_values(by=lrs_250.columns[0])
 lrs_300 = pd.read_csv('A_300.csv', header=None)
 lrs_300 = lrs_300.sort_values(by=lrs_300.columns[0])
 lrs = [lrs_200, lrs_250, lrs_300]
-tempuratures = [273+200, 273+250, 273+300]
+tempuratures = [200, 250, 300]
 
 
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    # lrs_raw_data_x = {}
-    # lrs_raw_data_x[(10, 273+200)] = lrs_200.iloc[:, 0].values
-    # lrs_raw_data_x[(10, 273+250)] = lrs_250.iloc[:, 0].values
-    # lrs_raw_data_x[(10, 273+300)] = lrs_300.iloc[:, 0].values
-    # lrs_raw_data_y = {}
-    # lrs_raw_data_y[(10, 273+200)] = lrs_200.iloc[:, 1].values
-    # lrs_raw_data_y[(10, 273+250)] = lrs_250.iloc[:, 1].values
-    # lrs_raw_data_y[(10, 273+300)] = lrs_300.iloc[:, 1].values
-    # lrs_threshold = {}
-    # lrs_threshold[(10, 273+200)] = 30000
-    # lrs_threshold[(10, 273+250)] = 500
-    # lrs_threshold[(10, 273+300)] = 100
-    # lrs_model_parameters = lrs_model.fit(raw_data_x=lrs_raw_data_x,
-    #                        raw_data_y=lrs_raw_data_y,
-    #                        initial_resistance=4250,
-    #                        threshold=lrs_threshold,
-    #                        tempurature=tempuratures,
-    #                        tempurature_threshold=298)
-    lrs_model_parameters = {'initial_resistance': 4250, 'p_1': 2.633e19, 'p_2': -2.19328, 'p_3': 0.07677623515706467, 'tempurature_threshold': 298}
+    lrs_raw_data_x = {}
+    lrs_raw_data_x[(10, 200)] = lrs_200.iloc[:, 0].values
+    lrs_raw_data_x[(10, 250)] = lrs_250.iloc[:, 0].values
+    lrs_raw_data_x[(10, 300)] = lrs_300.iloc[:, 0].values
+    lrs_raw_data_y = {}
+    lrs_raw_data_y[(10, 200)] = lrs_200.iloc[:, 1].values
+    lrs_raw_data_y[(10, 250)] = lrs_250.iloc[:, 1].values
+    lrs_raw_data_y[(10, 300)] = lrs_300.iloc[:, 1].values
+    lrs_threshold = {}
+    lrs_threshold[(10, 200)] = 30000
+    lrs_threshold[(10, 250)] = 500
+    lrs_threshold[(10, 300)] = 100
+    lrs_model_parameters = lrs_model.fit(raw_data_x=lrs_raw_data_x,
+                           raw_data_y=lrs_raw_data_y,
+                           initial_resistance=4250,
+                           threshold=lrs_threshold,
+                           tempurature=tempuratures,
+                           tempurature_threshold=298)
+    print(lrs_model_parameters)
+    # lrs_model_parameters = {'initial_resistance': 4250, 'p_1': 2.633e19, 'p_2': -2.19328, 'p_3': 0.07677623515706467, 'tempurature_threshold': 298}
 
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2

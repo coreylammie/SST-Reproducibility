@@ -26,7 +26,7 @@ if fit_raw_data:
     lrs_threshold[(10, None)] = 1e3
     lrs_model_parameters = lrs_model.fit(raw_data_x=lrs_raw_data_x,
                                          raw_data_y=lrs_raw_data_y,
-                                         initial_resistance=9e4,
+                                         initial_resistance=8.8e4,
                                          threshold=lrs_threshold)
     hrs_model = GeneralModel(operation_mode=OperationMode.gradual, tempurature_dependance=True, cell_size_dependance=False)
     hrs_raw_data_x = {}

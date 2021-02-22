@@ -42,7 +42,8 @@ class GeneralModel():
 
         if tempurature is not None:
             assert tempurature_threshold is not None
-            tempurature_constant = tempurature / tempurature_threshold
+            tempurature_constant = (tempurature - 273) / tempurature_threshold
+            # tempurature_constant = (tempurature) / tempurature_threshold
         else:
             tempurature_constant = 1
 
@@ -51,7 +52,6 @@ class GeneralModel():
             threshold = p_1 * np.exp(p_2 * cell_size * tempurature_constant)
             # print(threshold)
             out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** ((p_3 * cell_size) ** tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - (p_3 * cell_size) ** tempurature_constant * np.log10(threshold))])
-            # out = np.piecewise(input, [input <= threshold, input > threshold], [10 ** p_0, lambda input: 10 ** (p_3 * cell_size * tempurature_constant * np.log10(input) + np.log10(10 ** p_0) - p_3 * cell_size * tempurature_constant * np.log10(threshold))])
             if out is None or np.isnan(out).any() or np.isinf(out).any():
                 print('NaN Encountered')
                 print('out:', out)
@@ -152,11 +152,16 @@ class GeneralModel():
 
             parameters = Parameters()
             parameters.add('initial_resistance', value=initial_resistance, vary=False)
-            # parameters.add('p_1', value=5.471e+19, vary=False)
+            # parameters.add('p_1', value=7.901e+11, vary=False)
             parameters.add('p_1', value=out.params['p_1'], vary=False)
-            # parameters.add('p_2_1_1', value= -0.07368 * 298 / 10, vary=False)
+            # parameters.add('p_2_1_1', value= -0.08399 * 298 / 10, vary=False)
+
+
+            # exit(0)
+
+
             parameters.add('p_2_1_1', value=out.params['p_2'], vary=False)
-            parameters.add('p_3', value=0.5)
+            parameters.add('p_3', value=0.1)
             parameters.add('tempurature_threshold', value=tempurature_threshold, vary=False)
             if tempurature is not None:
                 parameters.add('tempurature_sets', value=len(tempurature), vary=False)

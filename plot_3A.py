@@ -19,6 +19,7 @@ lrs_250 = pd.read_csv('Experimental Data/3A_LRS_250.csv', header=None)
 lrs_250 = lrs_250.sort_values(by=lrs_250.columns[0])
 lrs = [lrs_250, lrs_225, lrs_200]
 tempuratures = [200+273, 225+273, 250+273]
+# tempuratures = [200, 225, 250]
 
 # Fit the model in gradual operation mode to the 20nm and 30nm experimental data
 if fit_raw_data:
@@ -26,7 +27,7 @@ if fit_raw_data:
     initial_resistance = 40000
     stable_resistance = 2.6e7
     tempurature_threshold = 298
-    lrs_model_parameters = {'initial_resistance': initial_resistance, 'p_1': np.log10(stable_resistance), 'p_2': 6.849e-10, 'p_3': 1.675, 'tempurature_threshold': tempurature_threshold}
+    lrs_model_parameters = {'initial_resistance': initial_resistance, 'p_1': np.log10(stable_resistance), 'p_2': 0.003117, 'p_3': 0.05626*298/10, 'tempurature_threshold': tempurature_threshold}
 
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
