@@ -16,11 +16,11 @@ def log_interp1d(xx, yy, kind='linear'):
     log_interp = lambda zz: np.power(10.0, lin_interp(np.log10(zz)))
     return log_interp
 
-phi_R = pd.read_csv('phi.csv', header=None)
+phi_R = pd.read_csv('Experimental Data/3D_phi.csv', header=None)
 phi_R_x = np.array(phi_R.iloc[:, 0].values)
 phi_R_y = np.array(phi_R.iloc[:, 1].values)
 
-data = pd.read_csv('R.csv', header=None)
+data = pd.read_csv('Experimental Data/3D_R.csv', header=None)
 R = data.iloc[:, 0].values
 phi = log_interp1d(phi_R_x, phi_R_y)(R)
 threshold = data.iloc[:, 1].values
@@ -38,8 +38,8 @@ plt.yscale('log')
 
 f_ = lambda cell_size, p_1, p_2: p_1 * np.exp(p_2 * cell_size)
 
-print(phi)
-print(threshold)
+# print(phi)
+# print(threshold)
 model_estimate = f_(phi * 1e9, 172.8, 0.258)
 
 matplotlib.rcParams['axes.linewidth'] = 2
