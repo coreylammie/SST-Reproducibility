@@ -51,7 +51,7 @@ plt.title('Au/NiO/Si', fontsize=label_size)
 
 plt.plot(phi, model_estimate, linestyle='--', color='blue', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
-plt.xlabel('$\phi$ (nm)', fontsize=label_size)
+plt.xlabel('$\phi$ (m)', fontsize=label_size)
 plt.ylabel('$τ_R$ (s)', fontsize=label_size)
 plt.grid(b=True, which='both')
 plt.show()
