@@ -66,25 +66,27 @@ if fit_raw_data:
                                threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
-# print(lrs_model_parameters)
-# print(hrs_model_parameters)
+print(lrs_model_parameters)
+print(hrs_model_parameters)
+# exit(0)
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
+label_size = 20
+tick_size = 16
 plt.figure(1)
 plt.gca().set_axisbelow(True)
 plt.minorticks_on()
 plt.title('TiN/Hf(Al)O/Hf/TiN', fontsize=label_size)
+markers = ['s', '^', 'v']
 for i in range(len(cell_sizes)):
     plt.grid(b=True, which='both')
     plt.xlim(1e0, 1e9)
-    plt.ylim(5e3, 1e7)
+    # plt.ylim(5e3, 1e8)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -92,5 +94,6 @@ for i in range(len(cell_sizes)):
     plt.xlabel('Cycle Number', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.show()

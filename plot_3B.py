@@ -37,20 +37,21 @@ if fit_raw_data:
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
+label_size = 20
+tick_size = 16
 plt.figure(1)
 plt.gca().set_axisbelow(True)
 plt.minorticks_on()
 plt.title('Ti/HfO$_x$/TiN\nTi/HfAlO/TiN', fontsize=label_size)
+markers = ['s', '^', 'v']
 for i in range(len(tempuratures)):
     plt.grid(b=True, which='both')
     # plt.xlim(1e0, 1e9)
     # plt.ylim(5e3, 1e7)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='magenta', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='magenta', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O_model.model(lrs_O[i].iloc[:, 0].values, **lrs_O_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A_model.model(lrs_A[i].iloc[:, 0].values, **lrs_A_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='magenta', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -58,5 +59,6 @@ for i in range(len(tempuratures)):
     plt.xlabel('Time (s)', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.show()

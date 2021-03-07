@@ -29,8 +29,8 @@ if fit_raw_data:
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
+label_size = 20
+tick_size = 16
 plt.figure(1)
 plt.title('TiN/ETML/HfO$_x$/TiN', fontsize=label_size)
 plt.gca().set_axisbelow(True)
@@ -48,4 +48,6 @@ if fit_raw_data:
 plt.xlabel('Cycle Number', fontsize=label_size)
 plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.show()

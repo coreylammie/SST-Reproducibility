@@ -14,9 +14,9 @@ fit_raw_data = True
 plt.figure(1, figsize=(20, 9))
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
-
+label_size = 20
+tick_size = 16
+markers = ['s', '^', 'v']
 plt.subplot(2, 4, 1)
 # Import and concatenate experimental data
 lrs_10 = pd.read_csv('Experimental Data/2A_LRS_10.csv')
@@ -72,11 +72,11 @@ plt.title('TiN/Hf(Al)O/Hf/TiN', fontsize=label_size)
 for i in range(len(cell_sizes)):
     plt.grid(b=True, which='both')
     plt.xlim(1e2, 1e9)
-    plt.ylim(1e3, 1e6)
+    plt.ylim(2e3, 1.5e5)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -84,6 +84,7 @@ for i in range(len(cell_sizes)):
     plt.xlabel('Cycle Number', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.tight_layout()
 plt.subplot(2, 4, 2)
@@ -185,11 +186,11 @@ plt.title('TiN/Hf(Al)O/Hf/TiN', fontsize=label_size)
 for i in range(len(cell_sizes)):
     plt.grid(b=True, which='both')
     plt.xlim(1e0, 1e9)
-    plt.ylim(5e3, 1e7)
+    # plt.ylim(5e3, 1e7)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(hrs[i].iloc[:, 0].values, hrs[i].iloc[:, 1].values, linestyle='-', color='r', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, **lrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(hrs[i].iloc[:, 0].values, hrs_model.model(hrs[i].iloc[:, 0].values, **hrs_model_parameters, cell_size=cell_sizes[i]), linestyle='--', color='r', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -197,6 +198,7 @@ for i in range(len(cell_sizes)):
     plt.xlabel('Cycle Number', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.tight_layout()
 plt.subplot(2, 4, 4)
@@ -236,6 +238,8 @@ if fit_raw_data:
 plt.xlabel('Cycle Number', fontsize=label_size)
 plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 plt.tight_layout()
 plt.subplot(2, 4, 5)
@@ -264,16 +268,17 @@ plt.title('Pt/Cu:MoO$_x$/GdO$_x$/Pt', fontsize=label_size)
 for i in range(len(tempuratures)):
     plt.grid(b=True, which='both')
     plt.xlim(1e0, 1e4)
-    plt.ylim(1e4, 1e7)
+    # plt.ylim(1e4, 1e7)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs[i].iloc[:, 0].values, lrs_model.model(lrs[i].iloc[:, 0].values, tempurature=tempuratures[i], **lrs_model_parameters), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 
     plt.xlabel('Time (s)', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.tight_layout()
 plt.subplot(2, 4, 6)
@@ -310,8 +315,8 @@ for i in range(len(tempuratures)):
     # plt.ylim(5e3, 1e7)
     plt.xscale('log')
     plt.yscale('log')
-    plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
-    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='magenta', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
+    plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A[i].iloc[:, 1].values, linestyle='-', color='magenta', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
     if fit_raw_data:
         plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O_model.model(lrs_O[i].iloc[:, 0].values, **lrs_O_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='b', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
         plt.plot(lrs_A[i].iloc[:, 0].values, lrs_A_model.model(lrs_A[i].iloc[:, 0].values, **lrs_A_model_parameters, tempurature=tempuratures[i]), linestyle='--', color='magenta', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
@@ -319,6 +324,7 @@ for i in range(len(tempuratures)):
     plt.xlabel('Time (s)', fontsize=label_size)
     plt.ylabel('Resistance ($\Omega$)', fontsize=label_size)
     plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+    plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 
 plt.tight_layout()
 plt.subplot(2, 4, 7)
@@ -371,6 +377,8 @@ plt.gca().set_axisbelow(True)
 plt.minorticks_on()
 plt.grid(b=True, which='both')
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
+# plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.axvspan(1200, 1e6, facecolor='b', alpha=0.25)
 plt.axvline(x=1200)
 plt.axvline(x=1e6)
@@ -409,16 +417,11 @@ f_ = lambda cell_size, p_1, p_2: p_1 * np.exp(p_2 * cell_size)
 # print(phi)
 # print(threshold)
 model_estimate = f_(phi * 1e9, 172.8, 0.258)
-
-matplotlib.rcParams['axes.linewidth'] = 2
-matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
-
 plt.title('Au/NiO/Si', fontsize=label_size)
 
 plt.plot(phi, model_estimate, linestyle='--', color='blue', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 plt.xlabel('$\phi$ (m)', fontsize=label_size)
 plt.ylabel('$τ_R$ (s)', fontsize=label_size)
 plt.grid(b=True, which='both')

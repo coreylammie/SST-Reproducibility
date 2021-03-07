@@ -44,14 +44,15 @@ model_estimate = f_(phi * 1e9, 172.8, 0.258)
 
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
+label_size = 20
+tick_size = 16
 
 plt.title('Au/NiO/Si', fontsize=label_size)
 
 plt.plot(phi, model_estimate, linestyle='--', color='blue', marker='o', markersize=15, markerfacecolor='None', markeredgewidth=1)
-plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
 plt.xlabel('$\phi$ (m)', fontsize=label_size)
 plt.ylabel('$τ_R$ (s)', fontsize=label_size)
+plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 plt.grid(b=True, which='both')
 plt.show()

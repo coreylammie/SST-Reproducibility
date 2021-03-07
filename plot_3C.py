@@ -43,8 +43,8 @@ if fit_raw_data:
 # Plot the experimental data and results from the fitted models
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
-label_size = 16
-tick_size = 12
+label_size = 20
+tick_size = 16
 plt.figure(1)
 plt.title('TiN/HfO$_x$/TiN', fontsize=label_size)
 plt.xlim(4e1, 2e6)
@@ -63,6 +63,7 @@ plt.gca().set_axisbelow(True)
 plt.minorticks_on()
 plt.grid(b=True, which='both')
 plt.gca().tick_params(axis='both', which='major', labelsize=tick_size)
+plt.gca().tick_params(axis='both', which='minor', labelsize=tick_size)
 plt.axvspan(1200, 1e6, facecolor='b', alpha=0.25)
 plt.axvline(x=1200)
 plt.axvline(x=1e6)
