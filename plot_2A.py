@@ -21,7 +21,7 @@ lrs = [lrs_10, lrs_20]
 hrs = [hrs_10, hrs_20]
 cell_sizes = [10, 20]
 
-# Fit the model in gradual operation mode to the 10nm and 20nm experimental data
+# Fit the model in gradual operation mode
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
     hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
@@ -54,10 +54,7 @@ if fit_raw_data:
                                threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
-    print(lrs_model_parameters)
-    print(hrs_model_parameters)
-    
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20

@@ -2,8 +2,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-# import sys
-# sys.path.insert(0,'..')
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
@@ -15,7 +13,7 @@ lrs = lrs.sort_values(by=lrs.columns[0])
 hrs = pd.read_csv('Experimental Data/3C_HRS.csv')
 hrs = hrs.sort_values(by=hrs.columns[0])
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in gradual operation mode
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, tempurature_dependance=True, cell_size_dependance=False)
     lrs_raw_data_x = {}
@@ -40,7 +38,7 @@ if fit_raw_data:
                                          initial_resistance=330000,
                                          threshold=hrs_threshold)
 
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20

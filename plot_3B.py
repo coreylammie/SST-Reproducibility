@@ -2,9 +2,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import math
-# import sys
-# sys.path.insert(0,'..')
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
@@ -27,14 +24,14 @@ lrs_300_A = lrs_300_A.sort_values(by=lrs_300_A.columns[0])
 lrs_A = [lrs_200_A, lrs_250_A, lrs_300_A]
 tempuratures = [273+200, 273+250, 273+300]
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in gradual operation mode
 if fit_raw_data:
     lrs_O_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
     lrs_O_model_parameters = {'initial_resistance': 4250, 'p_1': 14610000000, 'p_2': -1.9784220000000001, 'p_3': 0.14041884744983046, 'tempurature_threshold': 298}
     lrs_A_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
     lrs_A_model_parameters = {'initial_resistance': 4250, 'p_1': 790100000000, 'p_2': -2.5029019999999997, 'p_3': 0.0577995548620432257, 'tempurature_threshold': 298}
 
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20
@@ -46,8 +43,6 @@ plt.title('Ti/HfO$_x$/TiN\nTi/HfAlO/TiN', fontsize=label_size)
 markers = ['s', '^', 'v']
 for i in range(len(tempuratures)):
     plt.grid(b=True, which='both')
-    # plt.xlim(1e0, 1e9)
-    # plt.ylim(5e3, 1e7)
     plt.xscale('log')
     plt.yscale('log')
     plt.plot(lrs_O[i].iloc[:, 0].values, lrs_O[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)

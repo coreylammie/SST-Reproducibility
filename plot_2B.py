@@ -13,14 +13,14 @@ lrs = lrs.sort_values(by=lrs.columns[0])
 hrs = pd.read_csv('Experimental Data/2B_HRS.csv')
 hrs = hrs.sort_values(by=hrs.columns[0])
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in gradual operation mode
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
     hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
     lrs_model_parameters = {'initial_resistance': 750, 'p_1': 0.5, 'p_2': 0., 'p_3': 0.}
     hrs_model_parameters = {'initial_resistance': 9e10, 'p_1': 0.5, 'p_2': 0.5, 'p_3': -0.12}
 
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20

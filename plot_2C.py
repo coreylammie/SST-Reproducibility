@@ -25,7 +25,7 @@ lrs = [lrs_20, lrs_30, lrs_40]
 hrs = [hrs_20, hrs_30, hrs_40]
 cell_sizes = [20, 30, 40]
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in sudden operation mode
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
     hrs_model = GeneralModel(operation_mode=OperationMode.sudden, cell_size_dependance=True)
@@ -66,10 +66,7 @@ if fit_raw_data:
                                threshold=hrs_threshold,
                                cell_size=cell_sizes)
 
-print(lrs_model_parameters)
-print(hrs_model_parameters)
-# exit(0)
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20

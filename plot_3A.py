@@ -2,13 +2,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import math
-# import sys
-# sys.path.insert(0,'..')
 from GeneralModel import GeneralModel
 from GeneralModel import OperationMode
 
-# Constant compliance current- 200uA
+
 fit_raw_data = True
 # Import and concatenate experimental data
 lrs_200 = pd.read_csv('Experimental Data/3A_LRS_200.csv', header=None)
@@ -19,18 +16,16 @@ lrs_250 = pd.read_csv('Experimental Data/3A_LRS_250.csv', header=None)
 lrs_250 = lrs_250.sort_values(by=lrs_250.columns[0])
 lrs = [lrs_250, lrs_225, lrs_200]
 tempuratures = [200+273, 225+273, 250+273]
-# tempuratures = [200, 225, 250]
 
-# Fit the model in gradual operation mode to the 20nm and 30nm experimental data
+# Fit the model in sudden operation mode
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.sudden)
     initial_resistance = 40000
     stable_resistance = 2.6e7
     tempurature_threshold = 298
     lrs_model_parameters = {'initial_resistance': initial_resistance, 'p_1': np.log10(stable_resistance), 'p_2': 0.003117, 'p_3': 0.05626*298/10, 'tempurature_threshold': tempurature_threshold}
-    print(lrs_model_parameters)
 
-# Plot the experimental data and results from the fitted models
+# Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'
 label_size = 20
@@ -43,7 +38,6 @@ markers = ['s', '^', 'v']
 for i in range(len(tempuratures)):
     plt.grid(b=True, which='both')
     plt.xlim(1e0, 1e4)
-    # plt.ylim(1e4, 1e7)
     plt.xscale('log')
     plt.yscale('log')
     plt.plot(lrs[i].iloc[:, 0].values, lrs[i].iloc[:, 1].values, linestyle='-', color='b', marker=markers[i], markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
