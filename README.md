@@ -26,7 +26,7 @@ We provide a set of Python and MATLAB scripts to reproduce results from Figures 
 13. Results from Figure 6D can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6D.py](simulate_6D.py), and [plot_6D.m](plot_6D.m).
 
 ## General Model
-
+Experimental data from new devices can be fit using helper functions defined in [GeneralModel.py](GeneralModel.py).
 
 ## License
 All code is licensed under the GNU General Public License v3.0. Details pertaining to this are avaliable at: https://www.gnu.org/licenses/gpl-3.0.en.html
