@@ -20,10 +20,10 @@ We provide a set of Python and MATLAB scripts to reproduce results from Figures 
 7. Results from Figure 3C can be reproduced using [plot_3C.py](plot_3C.py).
 8. Results from Figure 3D can be reproduced using [plot_3D.py](plot_3D.py).
 9. Results from Figure 4 can be reproduced using [plot_4.py](plot_4.py).
-10. Results from Figure 6A can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [mobilenetv2.py](mobilenetv2.py), [simulate_6A.py](simulate_6A.py), and [plot_6A.m](plot_6A.m).
-11. Results from Figure 6B can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [mobilenetv2.py](mobilenetv2.py), [simulate_6B.py](simulate_6B.py), and [plot_6B.m](plot_6B.m).
-12. Results from Figure 6C can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [mobilenetv2.py](mobilenetv2.py), [simulate_6C.py](simulate_6C.py), and [plot_6C.m](plot_6C.m).
-13. Results from Figure 6D can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [mobilenetv2.py](mobilenetv2.py), [simulate_6D.py](simulate_6D.py), and [plot_6D.m](plot_6D.m).
+10. Results from Figure 6A can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6A.py](simulate_6A.py), and [plot_6A.m](plot_6A.m).
+11. Results from Figure 6B can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6B.py](simulate_6B.py), and [plot_6B.m](plot_6B.m).
+12. Results from Figure 6C can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6C.py](simulate_6C.py), and [plot_6C.m](plot_6C.m).
+13. Results from Figure 6D can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6D.py](simulate_6D.py), and [plot_6D.m](plot_6D.m).
 
 ## General Model
 
