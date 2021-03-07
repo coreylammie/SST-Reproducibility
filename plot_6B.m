@@ -1,5 +1,5 @@
 figure(2);
-data = csvread('endurance_sudden.csv', 1);
+data = csvread('6B.csv', 1);
 x = log10(data(:, 1));
 y = data(:, 2);
 z = data(:, 3);
@@ -19,6 +19,5 @@ ylim([1.3, 1.9]);
 zlabel('Test Set Accuracy (%)');
 zlim([10, 100]);
 zticks(10:30:100);
-title('Endurance (Sudden Operation)'); 
-% view(0,90);
+title('TiN/ETML/HFO_x/TiN'); 
 view(45, 45);
