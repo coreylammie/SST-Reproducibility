@@ -3,3 +3,6 @@ pandas
 scipy
 lmfit
 matplotlib
+torch
+torchvision
+memtorch
