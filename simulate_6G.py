@@ -47,7 +47,7 @@ def gradual(initial_resistance, time, p_0, p_1, p_2, cell_size, tempurature_cons
     return torch.pow(10, (np.power(p_2 * cell_size, tempurature_constant) * np.log10(time) + torch.log10(initial_resistance) - p_2 * cell_size * np.log10(threshold)))
 
 def model_gradual(layer, time, tempurature):
-    cell_size = 10
+    cell_size = 20
     convergence_point_lrs = 5e6
     threshold_lrs = 298
     initial_resistance_lrs = 4250
@@ -115,4 +115,4 @@ for time_ in times:
         accuracy = test(patched_model_copy, test_loader)
         del patched_model_copy
         df = df.append({'time': time_, 'tempurature': tempurature, 'test_set_accuracy': accuracy}, ignore_index=True)
-        df.to_csv('6C.csv', index=False)
+        df.to_csv('6G.csv', index=False)

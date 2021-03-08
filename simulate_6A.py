@@ -92,7 +92,7 @@ def model_degradation(model, cycle_count, v_stop):
     return model
 
 device = torch.device('cuda')
-batch_size = 128
+batch_size = 256
 transform_test = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),

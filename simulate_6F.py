@@ -1,4 +1,4 @@
-# Ti/HfOx/TiN devices from Figure 3 (B)
+# TiN/Hf(Al)O/HF/TiN devices from Figure 2 (C)
 import enum
 from enum import Enum, auto
 from memtorch.mn.Module import supported_module_parameters
@@ -42,35 +42,48 @@ def update_patched_model(patched_model, model):
 
     return patched_model
 
-def gradual(initial_resistance, time, p_0, p_1, p_2, cell_size, tempurature_constant):
-    threshold = p_0 * np.exp(p_1 * cell_size * tempurature_constant)
-    return torch.pow(10, (np.power(p_2 * cell_size, tempurature_constant) * np.log10(time) + torch.log10(initial_resistance) - p_2 * cell_size * np.log10(threshold)))
+scale_input = interp1d([1.3, 1.9], [0, 1])
+def scale_p_0(p_0, p_1, v_stop, cell_size=10):
+    scaled_input = scale_input(v_stop)
+    x = 1.50
+    y = p_0 * np.exp(p_1 * cell_size)
+    k = np.log10(y) / (1 - (2 * scale_input(x) - 1) ** (2))
+    return (10 ** (k * (1 - (2 * scaled_input - 1) ** (2)))) / (np.exp(p_1 * cell_size))
 
-def model_gradual(layer, time, tempurature):
-    cell_size = 10
-    convergence_point_lrs = 5e6
-    threshold_lrs = 298
-    initial_resistance_lrs = 4250
-    p_0_lrs = 14610000000
-    p_1_lrs = -1.9784220000000001
-    p_2_lrs = 0.14041884744983046
-    tempurature_threshold_lrs = 298
-    tempurature_constant_lrs = (tempurature - 273) / tempurature_threshold_lrs
-    threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size * tempurature_constant_lrs)
+def model_sudden(layer, cycle_count, v_stop):
+    cell_size = 40
+    convergence_point_lrs = 1e5
+    initial_resistance_lrs = 14000
+    stable_resistance_lrs = 5e7
+    p_0_lrs = 10500.207573382977
+    p_1_lrs = 0.2519450238812669
+    convergence_point_hrs = 1e5
+    initial_resistance_hrs = 300000
+    stable_resistance_hrs = 5e7
+    p_0_hrs = 10629.493769115974
+    p_1_hrs = 0.24199726610964553
+    p_0_lrs = scale_p_0(p_0_lrs, p_1_lrs, v_stop, cell_size)
+    p_0_hrs = scale_p_0(p_0_hrs, p_1_hrs, v_stop, cell_size)
+    threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size)
+    threshold_hrs = p_0_hrs * np.exp(p_1_hrs * cell_size)
     for i in range(len(layer.crossbars)):
         initial_resistance = 1 / layer.crossbars[i].conductance_matrix
         if initial_resistance[initial_resistance < convergence_point_lrs].nelement() > 0:
-            if time > threshold_lrs:
-                initial_resistance[initial_resistance < convergence_point_lrs] = gradual(initial_resistance[initial_resistance < convergence_point_lrs], time, p_0_lrs, p_1_lrs, p_2_lrs, cell_size, tempurature_constant_lrs)
+            if cycle_count > threshold_lrs:
+                initial_resistance[initial_resistance < convergence_point_lrs] = stable_resistance_lrs
+
+        if initial_resistance[initial_resistance > convergence_point_hrs].nelement() > 0:
+            if cycle_count > threshold_hrs:
+                initial_resistance[initial_resistance < convergence_point_hrs] = stable_resistance_hrs
 
         layer.crossbars[i].conductance_matrix = 1 / initial_resistance
 
     return layer
 
-def model_degradation(model, time, tempurature):
+def model_degradation(model, cycle_count, v_stop):
     for i, (name, m) in enumerate(list(model.named_modules())):
-            if type(m) in supported_module_parameters.values():
-                setattr(model, name, model_gradual(m, time, tempurature))
+        if type(m) in supported_module_parameters.values():
+            setattr(model, name, model_sudden(m, cycle_count, v_stop))
 
     return model
 
@@ -83,8 +96,8 @@ transform_test = transforms.Compose([
 test_set = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform_test)
 test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=1)
 reference_memristor = memtorch.bh.memristor.VTEAM
-r_on = 4250
-r_off = 5e6
+r_on = 14000
+r_off = 300000
 reference_memristor_params = {'time_series_resolution': 1e-10, 'r_off': r_off, 'r_on': r_on}
 model = MobileNetV2().to(device)
 model.load_state_dict(torch.load('trained_model.pt'), strict=False)
@@ -104,15 +117,16 @@ patched_model = patch_model(model,
                           quant_method='linear')
 del model
 patched_model.tune_()
-times = 10 ** np.arange(1, 10, dtype=np.float64)
-tempuratures = np.linspace(473, 573, 10, endpoint=True)
-df = pd.DataFrame(columns=['time', 'tempurature', 'test_set_accuracy'])
-for time_ in times:
-    for tempurature in tempuratures:
-        print('time: %f, tempurature: %f' % (time_, tempurature))
+times_to_reprogram = 10 ** np.arange(1, 10, dtype=np.float64)
+v_stop_values = np.linspace(1.3, 1.9, 10, endpoint=True)
+df = pd.DataFrame(columns=['times_reprogramed', 'v_stop', 'test_set_accuracy'])
+for time_to_reprogram in times_to_reprogram:
+    cycle_count = time_to_reprogram
+    for v_stop in v_stop_values:
+        print('time_to_reprogram: %f, v_stop: %f' % (time_to_reprogram, v_stop))
         patched_model_copy = copy.deepcopy(patched_model)
-        patched_model_copy = model_degradation(patched_model_copy, time_, tempurature)
+        patched_model_copy = model_degradation(patched_model_copy, cycle_count, v_stop)
         accuracy = test(patched_model_copy, test_loader)
         del patched_model_copy
-        df = df.append({'time': time_, 'tempurature': tempurature, 'test_set_accuracy': accuracy}, ignore_index=True)
-        df.to_csv('6C.csv', index=False)
+        df = df.append({'times_reprogramed': time_to_reprogram, 'v_stop': v_stop, 'test_set_accuracy': accuracy}, ignore_index=True)
+        df.to_csv('6F.csv', index=False)
