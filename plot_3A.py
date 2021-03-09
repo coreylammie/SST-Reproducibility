@@ -14,7 +14,6 @@ lrs_225 = pd.read_csv('Experimental Data/3A_LRS_225.csv', header=None)
 lrs_225 = lrs_225.sort_values(by=lrs_225.columns[0])
 lrs_250 = pd.read_csv('Experimental Data/3A_LRS_250.csv', header=None)
 lrs_250 = lrs_250.sort_values(by=lrs_250.columns[0])
-# lrs = [lrs_250, lrs_225, lrs_200]
 lrs = [lrs_200, lrs_225, lrs_250]
 tempuratures = [200+273, 225+273, 250+273]
 
