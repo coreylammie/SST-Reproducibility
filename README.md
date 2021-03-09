@@ -24,6 +24,10 @@ We provide a set of Python and MATLAB scripts to reproduce results from Figures 
 11. Results from Figure 6B can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6B.py](simulate_6B.py), and [plot_6B.m](plot_6B.m).
 12. Results from Figure 6C can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6C.py](simulate_6C.py), and [plot_6C.m](plot_6C.m).
 13. Results from Figure 6D can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6D.py](simulate_6D.py), and [plot_6D.m](plot_6D.m).
+14. Results from Figure 6E can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6E.py](simulate_6E.py), and [plot_6E.m](plot_6E.m).
+15. Results from Figure 6F can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6F.py](simulate_6F.py), and [plot_6F.m](plot_6F.m).
+16. Results from Figure 6G can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6G.py](simulate_6G.py), and [plot_6G.m](plot_6G.m).
+17. Results from Figure 6H can be reproduced using [train_mobilenetv2.py](train_mobilenetv2.py), [simulate_6H.py](simulate_6H.py), and [plot_6H.m](plot_6H.m).
 
 ## General Model
 Experimental data from new devices can be fit using helper functions defined in [GeneralModel.py](GeneralModel.py).
