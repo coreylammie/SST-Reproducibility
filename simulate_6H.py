@@ -47,8 +47,8 @@ def model_sudden(layer, time, tempurature):
     convergence_point_lrs = 2.6e7
     initial_resistance_lrs = 40000
     stable_resistance_lrs = 2.6e7
-    p_0_lrs = 0.003117
-    p_1_lrs = 1.676548
+    p_0_lrs = 3.089e+08
+    p_1_lrs = -1.677
     tempurature_threshold_lrs = 298
     tempurature_constant_lrs = (tempurature - 273) / tempurature_threshold_lrs
     threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size * tempurature_constant_lrs)
