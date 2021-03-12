@@ -26,10 +26,10 @@ tempuratures = [273+200, 273+250, 273+300]
 
 # Fit the model in gradual operation mode
 if fit_raw_data:
-    lrs_O_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    lrs_O_model_parameters = {'initial_resistance': 4250, 'p_1': 14610000000, 'p_2': -1.9784220000000001, 'p_3': 0.14041884744983046, 'tempurature_threshold': 298}
-    lrs_A_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=True)
-    lrs_A_model_parameters = {'initial_resistance': 4250, 'p_1': 790100000000, 'p_2': -2.5029019999999997, 'p_3': 0.0577995548620432257, 'tempurature_threshold': 298}
+    lrs_O_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
+    lrs_O_model_parameters = {'initial_resistance': 4250, 'p_0': 1.541e-13, 'p_1': 0, 'p_2': 63.43, 'p_3': 0.04, 'tempurature_threshold': 298}
+    lrs_A_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
+    lrs_A_model_parameters = {'initial_resistance': 4250, 'p_0': 4.764e-17, 'p_1': 0, 'p_2': 76.47, 'p_3': 0.014, 'tempurature_threshold': 298}
 
 # Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2

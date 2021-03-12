@@ -17,8 +17,17 @@ hrs = hrs.sort_values(by=hrs.columns[0])
 if fit_raw_data:
     lrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
     hrs_model = GeneralModel(operation_mode=OperationMode.gradual, cell_size_dependance=False)
-    lrs_model_parameters = {'initial_resistance': 750, 'p_1': 0.5, 'p_2': 0., 'p_3': 0.}
-    hrs_model_parameters = {'initial_resistance': 9e10, 'p_1': 0.5, 'p_2': 0.5, 'p_3': -0.12}
+    hrs_data_x = {}
+    hrs_data_x[(10, None)] = hrs.iloc[:, 0].values
+    hrs_data_y = {}
+    hrs_data_y[(10, None)] = hrs.iloc[:, 1].values
+    hrs_threshold = {}
+    hrs_threshold[(10, None)] = 120
+    hrs_model_parameters = hrs_model.fit(raw_data_x=hrs_data_x,
+                                raw_data_y=hrs_data_y,
+                                initial_resistance=9e10,
+                                threshold=hrs_threshold)
+    lrs_model_parameters = {'initial_resistance': 750, 'p_0': 0.5, 'p_1': 0., 'p_2': 0.}
 
 # Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2

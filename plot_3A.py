@@ -23,7 +23,7 @@ if fit_raw_data:
     initial_resistance = 40000
     stable_resistance = 2.6e7
     tempurature_threshold = 298
-    lrs_model_parameters = {'initial_resistance': initial_resistance, 'p_1': np.log10(stable_resistance), 'p_2': 3.089e+08, 'p_3': -1.677, 'tempurature_threshold': tempurature_threshold}
+    lrs_model_parameters = {'initial_resistance': initial_resistance, 'stable_resistance': stable_resistance, 'p_0': 1.029e-09, 'p_1': 0, 'p_2': 46.01, 'tempurature_threshold': tempurature_threshold}
 
 # Plot the experimental data and results from the model
 matplotlib.rcParams['axes.linewidth'] = 2
