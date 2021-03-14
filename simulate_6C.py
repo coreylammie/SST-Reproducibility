@@ -42,26 +42,25 @@ def update_patched_model(patched_model, model):
 
     return patched_model
 
-def gradual(initial_resistance, time, p_0, p_1, p_2, cell_size, tempurature_constant):
-    threshold = p_0 * np.exp(p_1 * cell_size * tempurature_constant)
-    return torch.pow(10, (torch.pow(p_2 * cell_size, tempurature_constant) * torch.log10(time) + torch.log10(initial_resistance) - p_2 * cell_size * np.log10(threshold)))
+def gradual(initial_resistance, time, p_0, p_2, p_3, tempurature_constant):
+    threshold = p_0 * np.exp(p_2 * tempurature_constant)
+    return torch.pow(10, (p_3 * (p_2 * tempurature_constant) * np.log10(time) + torch.log10(initial_resistance) - p_3 * (p_2 * tempurature_constant) * np.log10(threshold)))
 
 def model_gradual(layer, time, tempurature):
-    cell_size = 10
     convergence_point_lrs = 5e6
     threshold_lrs = 298
     initial_resistance_lrs = 4250
-    p_0_lrs = 14610000000
-    p_1_lrs = -1.9784220000000001
-    p_2_lrs = 0.14041884744983046
+    p_0_lrs = 1.541e-13
+    p_2_lrs = 63.43
+    p_3_lrs = 0.04
     tempurature_threshold_lrs = 298
-    tempurature_constant_lrs = (tempurature - 273) / tempurature_threshold_lrs
-    threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size * tempurature_constant_lrs)
+    tempurature_constant_lrs = np.min(tempurature_threshold_lrs / tempurature, 1)
+    threshold_lrs = p_0_lrs * np.exp(p_2_lrs * tempurature_constant_lrs)
     for i in range(len(layer.crossbars)):
         initial_resistance = 1 / layer.crossbars[i].conductance_matrix
         if initial_resistance[initial_resistance < convergence_point_lrs].nelement() > 0:
             if time > threshold_lrs:
-                initial_resistance[initial_resistance < convergence_point_lrs] = gradual(initial_resistance[initial_resistance < convergence_point_lrs], time, p_0_lrs, p_1_lrs, p_2_lrs, cell_size, tempurature_constant_lrs)
+                initial_resistance[initial_resistance < convergence_point_lrs] = gradual(initial_resistance[initial_resistance < convergence_point_lrs], time, p_0_lrs, p_2_lrs, p_3_lrs, tempurature_constant_lrs)
 
         layer.crossbars[i].conductance_matrix = 1 / initial_resistance
 

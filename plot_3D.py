@@ -28,7 +28,7 @@ plt.minorticks_on()
 plt.plot(phi, threshold, linestyle='-', color='b', marker='s', markersize=17.5, markerfacecolor='None', markeredgewidth=2.5)
 plt.xscale('log')
 plt.yscale('log')
-f_ = lambda cell_size, p_1, p_2: p_1 * np.exp(p_2 * cell_size)
+f_ = lambda cell_size, p_0, p_1: p_0 * np.exp(p_1 * cell_size)
 model_estimate = f_(phi * 1e9, 172.8, 0.258)
 matplotlib.rcParams['axes.linewidth'] = 2
 matplotlib.rcParams['font.family'] = 'sans-serif'

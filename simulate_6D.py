@@ -43,15 +43,14 @@ def update_patched_model(patched_model, model):
     return patched_model
 
 def model_sudden(layer, time, tempurature):
-    cell_size = 10
     convergence_point_lrs = 2.6e7
     initial_resistance_lrs = 40000
     stable_resistance_lrs = 2.6e7
-    p_0_lrs = 0.003117
-    p_1_lrs = 1.676548
+    p_0_lrs = 1.029e-09
+    p_2_lrs = 46.01
     tempurature_threshold_lrs = 298
-    tempurature_constant_lrs = (tempurature - 273) / tempurature_threshold_lrs
-    threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size * tempurature_constant_lrs)
+    tempurature_constant_lrs = np.min(tempurature_threshold_lrs / tempurature, 1)
+    threshold_lrs = p_0_lrs * np.exp(p_2_lrs * tempurature_constant_lrs)
     for i in range(len(layer.crossbars)):
         initial_resistance = 1 / layer.crossbars[i].conductance_matrix
         if initial_resistance[initial_resistance < convergence_point_lrs].nelement() > 0:

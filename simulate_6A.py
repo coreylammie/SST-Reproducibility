@@ -50,9 +50,9 @@ def scale_p_0(p_0, p_1, v_stop, cell_size=10):
     k = np.log10(y) / (1 - (2 * scale_input(x) - 1) ** (2))
     return (10 ** (k * (1 - (2 * scaled_input - 1) ** (2)))) / (np.exp(p_1 * cell_size))
 
-def gradual(initial_resistance, cycle_count, p_0, p_1, p_2, cell_size):
+def gradual(initial_resistance, cycle_count, p_0, p_1, p_3, cell_size):
     threshold = p_0 * np.exp(p_1 * cell_size)
-    return torch.pow(10, (p_2 * cell_size * np.log10(cycle_count) + torch.log10(initial_resistance) - p_2 * cell_size * np.log10(threshold)))
+    return torch.pow(10, (p_3 * (p_1 * cell_size) * np.log10(cycle_count) + torch.log10(initial_resistance) - p_3 * (p_1 * cell_size) * np.log10(threshold)))
 
 def model_gradual(layer, cycle_count, v_stop):
     cell_size = 10
@@ -60,12 +60,12 @@ def model_gradual(layer, cycle_count, v_stop):
     initial_resistance_lrs = 4400
     p_0_lrs = 10.0
     p_1_lrs = 0.6907755278982137
-    p_2_lrs = 0.012171029136082496
+    p_3_lrs = 0.01761938501608977
     convergence_point_hrs = 1e4
     initial_resistance_hrs = 65000
     p_0_hrs = 10.0
     p_1_hrs = 0.6907755278982137
-    p_2_hrs = -0.015855563129903612
+    p_3_hrs = -0.022953419050669107
     p_0_lrs = scale_p_0(p_0_lrs, p_1_lrs, v_stop, cell_size)
     p_0_hrs = scale_p_0(p_0_hrs, p_1_hrs, v_stop, cell_size)
     threshold_lrs = p_0_lrs * np.exp(p_1_lrs * cell_size)
@@ -74,11 +74,11 @@ def model_gradual(layer, cycle_count, v_stop):
         initial_resistance = 1 / layer.crossbars[i].conductance_matrix
         if initial_resistance[initial_resistance < convergence_point_lrs].nelement() > 0:
             if cycle_count > threshold_lrs:
-                initial_resistance[initial_resistance < convergence_point_lrs] = gradual(initial_resistance[initial_resistance < convergence_point_lrs], cycle_count, p_0_lrs, p_1_lrs, p_2_lrs, cell_size)
+                initial_resistance[initial_resistance < convergence_point_lrs] = gradual(initial_resistance[initial_resistance < convergence_point_lrs], cycle_count, p_0_lrs, p_1_lrs, p_3_lrs, cell_size)
 
         if initial_resistance[initial_resistance > convergence_point_hrs].nelement() > 0:
             if cycle_count > threshold_hrs:
-                initial_resistance[initial_resistance > convergence_point_hrs] = gradual(initial_resistance[initial_resistance > convergence_point_hrs], cycle_count, p_0_hrs, p_1_hrs, p_2_hrs, cell_size)
+                initial_resistance[initial_resistance > convergence_point_hrs] = gradual(initial_resistance[initial_resistance > convergence_point_hrs], cycle_count, p_0_hrs, p_1_hrs, p_3_hrs, cell_size)
 
         layer.crossbars[i].conductance_matrix = 1 / initial_resistance
 
