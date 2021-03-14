@@ -118,9 +118,6 @@ class GeneralModel():
 
             out = threshold_model.fit(threshold_, parameters, cell_size=cell_size)
 
-        # print(fit_report(out))
-        # 'p_0': , 'p_1': 0, 'p_2': 54.87, 'p_3': 0.0475,
-
         if self.operation_mode == OperationMode.gradual:
             parameters = Parameters()
             parameters.add('initial_resistance', value=initial_resistance, vary=False)
@@ -145,7 +142,6 @@ class GeneralModel():
                 parameters.add('cell_size_%d' % (i+1), value=cell_size[i], vary=False)
 
             out = minimize(self.objective, parameters, args=(raw_data_x, raw_data_y))
-            # print(fit_report(out))
             return {'initial_resistance': initial_resistance, 'p_0': out.params['p_0'].value, 'p_1': out.params['p_1'].value, 'p_2': out.params['p_2'].value, 'p_3': out.params['p_3'].value, 'tempurature_threshold': out.params['tempurature_threshold'].value}
         elif self.operation_mode == OperationMode.sudden:
             if tempurature is not None:

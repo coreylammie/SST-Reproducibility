@@ -19,5 +19,5 @@ ylim([1.3, 1.9]);
 zlabel('Test Set Accuracy (%)');
 zlim([10, 100]);
 zticks(10:30:100);
-title('TiN/ETML/HFO_x/TiN'); 
+title('TiN/Hf(Al)O/HF/TiN (20nm)'); 
 view(45, 45);

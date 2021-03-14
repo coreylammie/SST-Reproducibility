@@ -17,6 +17,6 @@ xticks(1:9);
 ylim([1.3, 1.9]);
 ylabel('v_{stop}');
 zlabel('Test Set Accuracy (%)');
-zlim([40, 100]);
-title('TiN/Hf(Al)O/Hf/TiN'); 
+zlim([10, 100]);
+title('TiN/Hf(Al)O/Hf/TiN (10nm)'); 
 view(45, 45);

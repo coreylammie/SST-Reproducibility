@@ -1,7 +1,7 @@
-figure(4);
-data = csvread('6D.csv', 1);
+figure(8);
+data = csvread('6H.csv', 1);
 x = log10(data(:, 1));
-y = data(:, 2) - 273;
+y = data(:, 2);
 z = data(:, 3);
 dt = delaunayTriangulation(x,y) ;
 tri = dt.ConnectivityList ;
@@ -14,10 +14,11 @@ xlabel('Time (s)');
 xtickformat('10^%d');
 xticks(0:9);
 xlim([1, 9]);
-ylim([200, 250]);
-ylabel('Tempurature (°C)');
+ylim([5e-10, 5e-8]);
+set(gca, 'YScale', 'log')
+ylabel('\phi (m)');
 zlabel('Test Set Accuracy (%)');
 zlim([10, 100]);
 zticks(10:30:100);
-title('Pt/Cu:MoO_x/Gd/O_x/Pt'); 
+title('Au/NiO/Si'); 
 view(45, 45);
