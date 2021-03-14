@@ -1,0 +1,23 @@
+figure(6);
+data = csvread('6F.csv', 1);
+x = log10(data(:, 1));
+y = data(:, 2);
+z = data(:, 3);
+dt = delaunayTriangulation(x,y) ;
+tri = dt.ConnectivityList ;
+xi = dt.Points(:,1) ; yi = dt.Points(:,2) ;
+F = scatteredInterpolant(x,y,z);
+zi = F(xi,yi);
+colormap(redblue);
+trisurf(tri,xi,yi,zi) 
+xlabel('Times Programmed');
+xtickformat('10^%d');
+xticks(0:9);
+xlim([1, 9]);
+ylabel('v_{stop}');
+ylim([1.3, 1.9]);
+zlabel('Test Set Accuracy (%)');
+zlim([10, 100]);
+zticks(10:30:100);
+title('TiN/Hf(Al)O/Hf/TiN (40nm)'); 
+view(45, 45);
