@@ -6,6 +6,7 @@ import torch.optim as optim
 import numpy as np
 import random
 import torchvision
+import torchvision.transforms as transforms
 from mobilenetv2 import MobileNetV2
 
 
