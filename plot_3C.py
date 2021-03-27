@@ -15,7 +15,7 @@ hrs = hrs.sort_values(by=hrs.columns[0])
 
 # Fit the model in gradual operation mode
 if fit_raw_data:
-    lrs_model = GeneralModel(operation_mode=OperationMode.gradual, tempurature_dependance=True, cell_size_dependance=False)
+    lrs_model = GeneralModel(operation_mode=OperationMode.gradual, temperature_dependance=True, cell_size_dependance=False)
     lrs_raw_data_x = {}
     lrs_raw_data_x[(10, None)] = lrs.iloc[:, 0].values
     lrs_raw_data_y = {}
@@ -26,7 +26,7 @@ if fit_raw_data:
                                          raw_data_y=lrs_raw_data_y,
                                          initial_resistance=8.8e4,
                                          threshold=lrs_threshold)
-    hrs_model = GeneralModel(operation_mode=OperationMode.gradual, tempurature_dependance=True, cell_size_dependance=False)
+    hrs_model = GeneralModel(operation_mode=OperationMode.gradual, temperature_dependance=True, cell_size_dependance=False)
     hrs_raw_data_x = {}
     hrs_raw_data_x[(10, None)] = hrs.iloc[:, 0].values
     hrs_raw_data_y = {}
