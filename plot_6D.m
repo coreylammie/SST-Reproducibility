@@ -15,7 +15,7 @@ xtickformat('10^%d');
 xticks(0:9);
 xlim([1, 9]);
 ylim([200, 250]);
-ylabel('Tempurature (°C)');
+ylabel('Temperature (Â°C)');
 zlabel('Test Set Accuracy (%)');
 zlim([10, 100]);
 zticks(10:30:100);
